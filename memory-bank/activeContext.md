@@ -1,14 +1,14 @@
 # Active Context: Tennessee Justice Bus Pre-Visit Screening
 
-**Date:** April 12, 2025 (Updated - UI Components, Authentication Implementation, and Next.js 15 Routing Research)
+**Date:** April 12, 2025 (Updated - Vercel Deployment Completed)
 
 ## 1. Current Focus
 
 - **~~Initializing Project~~**: ✓ Project foundation established with Next.js setup
 - **~~Database Setup~~**: ✓ Successfully implemented Drizzle ORM with Supabase PostgreSQL
 - **~~UI Component Library~~**: ✓ Installed and configured Shadcn UI components
-- **~~Authentication System~~**: ✓ Implemented NextAuth.js with Supabase integration, forms, and verification flows
-- **Vercel Deployment**: Setting up deployment via GitHub connector to Vercel
+- **~~Authentication System~~**: ✓ Implemented NextAuth.js with Supabase adapter, JWT sessions, email and phone authentication
+- **~~Vercel Deployment~~**: ✓ Set up deployment via GitHub connector to Vercel with CLI access
 - **Core Feature Implementation**: Building application foundation components
   - **User Dashboard**: Creating the authenticated user dashboard
   - **Client Intake Forms**: Building intake forms for client information
@@ -24,6 +24,13 @@
   - `techContext.md` created, listing the specific technologies and constraints.
   - This file (`activeContext.md`) created.
   - `next-js-15-routing.md` created, documenting Next.js 15 routing features and implications.
+  - Created `archived/` directory for archiving implementation plans and documentation.
+- **Deployment Setup**:
+  - Configured Vercel deployment through GitHub connector
+  - Set up environment variables in Vercel dashboard
+  - Created staging and production environments
+  - Installed and configured Vercel CLI for local interaction with deployments
+  - Documented deployment process in DEPLOYMENT.md
 - **Technology Decisions**:
   - Selected Supabase PostgreSQL as the database provider (replacing Vercel Postgres)
   - Chose Knock for SMS notifications and messaging workflows (replacing Twilio)
@@ -51,7 +58,15 @@
   - Built user registration with multiform sign-up
   - Added email and SMS verification processes
   - Created protected routes with middleware
-  - Implemented offline-ready authentication with JWT token storage
+  - Implemented offline-ready authentication with JWT-based session strategy
+    - Token includes user ID, email, phone, and creation timestamp
+    - 30-day session lifetime for extended offline usage
+    - Secure token storage for offline authentication
+  - Created Phone Number authentication using Credentials provider
+    - 6-digit verification code validation
+    - Automatic user creation for new phone numbers
+    - Last login timestamp tracking on successful authentication
+  - Added custom NextAuth callbacks for token and session management
   - Added user type definitions for improved type safety
 
 ## 3. Immediate Next Steps
@@ -62,26 +77,27 @@
 4.  ~~**UI Component Library**: Install and configure Shadcn UI components.~~ ✓
 5.  ~~**Authentication System**: Implement NextAuth.js with Supabase adapter and create sign-in/sign-up flows.~~ ✓
 6.  **Continue Phase 1 (Foundation)**:
-    - **User Dashboard**:
+    - **User Dashboard** (Priority 1):
       - Create user dashboard layout with user profile information
       - Add case overview and application status displays
       - Implement settings management for user preferences
-    - **Offline Support**:
+    - **~~Vercel Deployment~~** (Priority 2): ✓
+      - ~~Configure GitHub connector for automatic deployment~~ ✓
+      - ~~Set up environment variables in Vercel dashboard~~ ✓
+      - ~~Deploy to staging environment for testing~~ ✓
+    - **Offline Support** (Priority 3):
       - Enhance the current JWT-based offline authentication
       - Add service worker for caching API requests
       - Implement background synchronization for offline data
-    - **Notification System**:
-      - Set up Knock SMS integration for functional SMS verification
+    - **Notification System** (Priority 4):
+      - Complete Knock SMS integration for functional SMS verification
       - Create email notification templates
       - Implement appointment reminders
-    - **Vercel Deployment**:
-      - Configure GitHub connector for automatic deployment
-      - Set up environment variables in Vercel dashboard
-      - Deploy to staging environment for testing
 
 ## 4. Active Decisions & Considerations
 
 - **Technology Stack**: Confirmed commitment to Next.js 14+, Vercel platform (for deployment, KV, Blob), Supabase (for PostgreSQL database), Knock (for SMS), TypeScript, Tailwind CSS, Shadcn UI, NextAuth.js, and Claude AI. Researched Next.js 15 routing features for potential future upgrade.
+- **Deployment Workflow**: Using Vercel CLI for interacting with deployments, managing environment variables, and monitoring application status from the command line.
 - **Package Manager**: Using `pnpm` as requested.
 - **Architecture**: Adhering to the JAMstack and serverless patterns outlined in `systemPatterns.md`.
 - **State Management**: Leaning towards React Query/SWR for server state, Context API for global UI state (needs final confirmation between React Query/SWR if both aren't used).
@@ -104,4 +120,4 @@
 - Next.js 15's routing features (especially Error Handling, Loading States, and Intercepting Routes) align well with our offline-first requirements and could enhance the user experience in low-connectivity environments.
 - Next.js 15 changes page component props from synchronous to Promise-based, which would require updating all existing page components during migration.
 
-_This document reflects the project state after bootstrapping the Next.js application and researching Next.js 15 routing features._
+_This document reflects the project state after bootstrapping the Next.js application, implementing the authentication system, setting up Vercel deployment with CLI access, and researching Next.js 15 routing features._

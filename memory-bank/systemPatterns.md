@@ -1,6 +1,6 @@
 # System Patterns: Tennessee Justice Bus Pre-Visit Screening
 
-**Date:** April 12, 2025 (Updated - UI Components and Authentication Implementation)
+**Date:** April 12, 2025 (Updated - Vercel Deployment Completed)
 
 ## 1. Core Architecture: JAMstack on Vercel
 
@@ -42,6 +42,7 @@ graph TD
     - **Vercel Blob Storage**: Secure storage for client-uploaded documents.
     - **Vercel Edge Network**: Global CDN for static assets and edge function execution.
     - **Knock**: SMS and notification platform for communications.
+    - **Vercel CLI**: Command-line interface for managing Vercel deployments, environments, and configuration.
 4.  **Component-Based UI**:
     - Frontend built with reusable React components using Shadcn UI component library
     - Follows a composition pattern where complex components are built from primitive UI components
@@ -50,22 +51,47 @@ graph TD
 5.  **API Layer**: RESTful APIs exposed via Next.js API routes (`/api/v1/...`).
 6.  **Authentication**:
     - NextAuth.js with Supabase adapter for seamless integration with Supabase Auth
-    - JWT-based session strategy for offline support
-    - Multiple auth methods: Email/Password, SMS (via Knock), and Magic Links
-    - Secure token storage with encryption for offline authentication
-    - Role-based access control via Next.js middleware
+    - JWT-based session strategy optimized for offline support:
+      - 30-day session lifetime for extended offline usage
+      - Token includes user ID, email, phone, and creation timestamp (iat)
+      - Custom JWT callback to maintain critical user data in the token
+      - Secure token storage with encryption for offline authentication
+    - Multiple authentication providers:
+      - EmailProvider for email-based authentication with configurable server settings
+      - CredentialsProvider for phone-based authentication with 6-digit code verification
+      - Support for Magic Links through email workflow
+    - User management:
+      - Automatic user lookup by phone or email
+      - New user creation for first-time authentication
+      - Last login timestamp tracking on successful sign-in
+    - Protected routes:
+      - Role-based access control via Next.js middleware
+      - Custom page redirects for authentication flows
+      - Error handling for authentication failures
 7.  **State Management**: Primarily using React Query for server state caching/synchronization, supplemented by React Context API for global UI state.
 8.  **Form Handling**: Utilizing React Hook Form for efficient form state management and Zod for schema validation.
 9.  **Progressive Web App (PWA)**: Service workers, manifest, and caching strategies to enable offline functionality and installability.
 10. **AI Integration**: Dedicated API routes (`/api/v1/ai/...`) to interact with the Anthropic API (Claude), encapsulating prompt engineering and context management.
+11. **Deployment Strategy**:
+    - GitHub integration with Vercel for continuous deployment
+    - Automatic preview deployments for pull requests
+    - Production deployment from main branch
+    - Environment-based configuration with separate staging and production environments
+    - Vercel CLI for local interaction with deployments and environment management
 
 ## 3. Data Flow Patterns
 
+- **Authentication Flow**:
+  - User initiates sign-in/sign-up -> Form validation with Zod -> API routes (/api/auth/...) -> NextAuth.js -> Supabase Auth/DB -> JWT generation -> Client-side storage
+  - For phone authentication: Phone entry -> SMS code sent via Knock -> Code verification -> User creation/lookup -> JWT session
+  - For email authentication: Email entry -> Magic link sent -> Link verification -> User creation/lookup -> JWT session
+  - On successful authentication: Update last_login timestamp -> Generate session with user data -> Redirect to protected route
 - **Client Intake**: Multi-step forms capture user data -> API routes -> Supabase PostgreSQL. AI assists via separate API calls.
 - **Document Upload**: Client uploads file -> Frontend sends to API route -> API route streams to Vercel Blob Storage -> Stores URL/metadata in Supabase PostgreSQL.
 - **Scheduling**: Client interacts with scheduling UI -> API calls to check availability (potentially integrating with Cal.com) -> Creates appointment record in Supabase PostgreSQL -> Sends notification via Knock.
 - **Offline Sync**: Data entered offline stored locally (IndexedDB) -> Service worker detects connectivity -> Background sync pushes data to API routes.
 - **Notifications**: Events (appointment confirmation, reminders, updates) -> API routes -> Knock workflows -> SMS delivery to clients.
+- **Deployment Workflow**: Code changes -> GitHub repository -> Vercel build pipeline -> Preview/Production deployment -> Post-deployment verification.
 
 ## 4. Important Implementation Paths
 
@@ -74,4 +100,4 @@ graph TD
 - **AI Interaction**: Prompt engineering and context management are key to providing helpful, accurate, and safe assistance without giving legal advice. Requires careful boundary setting and potential human review loops.
 - **Offline Strategy**: Implementing reliable offline data storage, caching, and background synchronization is crucial for rural usability.
 
-_This document is based on `projectBrief.md` and `justice-bus-tdd.md`._
+_This document is based on `projectBrief.md`, `justice-bus-tdd.md`, implementation details from the authentication system, and the completed Vercel deployment setup._

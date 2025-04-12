@@ -1,4 +1,6 @@
-# Authentication System Implementation Plan
+# [ARCHIVED] Authentication System Implementation Plan
+
+> **Archive Note**: This implementation plan has been archived on April 12, 2025. The authentication system has been fully implemented according to this plan. Current details about the authentication system can be found in the memory bank files (particularly systemPatterns.md, activeContext.md, and progress.md).
 
 ## Current Status
 

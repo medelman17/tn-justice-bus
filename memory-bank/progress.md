@@ -1,6 +1,6 @@
 # Project Progress: Tennessee Justice Bus Pre-Visit Screening
 
-**Date:** April 12, 2025 (Updated - UI Components, Authentication Implementation, and Next.js 15 Routing Research)
+**Date:** April 12, 2025 (Updated - Vercel Deployment Completed)
 
 ## 1. Current Status: Foundation Phase
 
@@ -43,7 +43,6 @@ The project has completed the initial setup, bootstrapping, database implementat
 - Developing offline-ready data synchronization for rural environments
 - Setting up Knock integration for functional SMS notifications
 - Implementing client intake form flows
-- Setting up Vercel deployment through GitHub connector
 - Researching Next.js 15 routing features for potential application improvements
 
 ## 3.1 Database Integration (Completed)
@@ -75,9 +74,20 @@ The project has completed the initial setup, bootstrapping, database implementat
 - **NextAuth.js Implementation**:
   - Set up NextAuth.js with Supabase adapter
   - Configured JWT-based session strategy for offline support
+    - 30-day session lifetime for extended offline usage
+    - Token includes user ID, email, phone, and creation timestamp
+    - Custom JWT callback to maintain critical user data in the token
   - Created custom type definitions for enhanced type safety
   - Implemented protected routes with middleware
-  - Added login event tracking
+  - Added login event tracking to update last_login timestamp
+- **Multi-Provider Authentication**:
+  - Implemented EmailProvider for email-based authentication
+    - Configurable email server settings
+    - Custom verification workflow
+  - Created Phone Number authentication using CredentialsProvider
+    - 6-digit verification code validation
+    - Automatic user lookup or creation based on phone number
+    - Integration with database for persistent user storage
 - **Authentication UI**:
   - Created sign-in page with email and phone tabs
   - Built sign-up flow with first/last name and contact preference
@@ -88,6 +98,25 @@ The project has completed the initial setup, bootstrapping, database implementat
   - Enhanced `/api/auth/[...nextauth]/route.ts` with Supabase integration
   - Created `/api/auth/register` endpoint for user registration
   - Added `/api/auth/verify-phone` for SMS verification
+  - Implemented custom callbacks for session and token management
+
+## 3.4 Vercel Deployment (Completed)
+
+- **GitHub Integration**:
+  - Connected GitHub repository to Vercel
+  - Configured automatic deployments for main branch
+  - Set up preview deployments for pull requests
+- **Environment Configuration**:
+  - Created production and staging environments
+  - Configured all required environment variables
+  - Set up proper build settings for Next.js application
+- **Vercel Services Integration**:
+  - Integrated with Vercel PostgreSQL, KV, and Blob storage services
+  - Configured proper region settings for performance optimization
+- **CLI Setup**:
+  - Installed and authenticated Vercel CLI
+  - Set up project linking for local development workflow
+  - Documented CLI commands for common operations in DEPLOYMENT.md
 
 ## 4. Next Steps & Upcoming Milestones (Phase 1: Foundation - Weeks 1-4)
 
@@ -107,16 +136,16 @@ The project has completed the initial setup, bootstrapping, database implementat
     - ~~Implement sign-in, sign-up, sign-out flows.~~ ✓
     - ~~Create verification workflows for email and phone.~~ ✓
     - ~~Implement protected routes with middleware.~~ ✓
-    - ~~Set up offline-ready authentication.~~ ✓
+    - ~~Set up offline-ready authentication with JWT session strategy.~~ ✓
     - Integrate Knock for SMS-based verification and notifications.
-5.  **Basic User Management**:
+5.  **User Dashboard & Profile Management** (Priority 1):
     - Create API routes for user profiles.
     - Implement basic profile page UI.
     - Create user settings pages.
-6.  **Infrastructure & CI/CD**:
-    - Configure Vercel environment variables.
-    - Set up GitHub connector for automatic deployments.
-    - Ensure proper preview deployments for branches.
+6.  **Infrastructure & CI/CD** (Priority 2):
+    - ~~Configure Vercel environment variables.~~ ✓
+    - ~~Set up GitHub connector for automatic deployments.~~ ✓
+    - ~~Ensure proper preview deployments for branches.~~ ✓
 
 ## 5. Planned Phases (High-Level Overview)
 
@@ -148,5 +177,7 @@ The project has completed the initial setup, bootstrapping, database implementat
 - **[2025-04-12]**: Decision to use middleware-based protection for authenticated routes.
 - **[2025-04-12]**: Conducted research on Next.js 15 routing features (particularly Dynamic Routes, Intercepting Routes, Error Handling, and Loading UI) to evaluate potential application improvements for the offline-first requirement.
 - **[2025-04-12]**: Discovered that Next.js 15 changes page component props (params and searchParams) from synchronous to Promise-based, which would require significant updates to all page components during future migration.
+- **[2025-04-12]**: Decision to archive implementation plans once completed, moving them to memory-bank/archived directory with timestamp and status notes.
+- **[2025-04-12]**: Decision to use Vercel CLI for interacting with deployments and managing environment variables, simplifying the development-to-production workflow.
 
-_This document reflects the project progress after implementing the database schema, installing UI components, implementing the authentication system, and researching Next.js 15 routing features._
+_This document reflects the project progress after implementing the database schema, installing UI components, implementing the detailed authentication system with JWT-based sessions and multi-provider support, setting up Vercel deployment with CLI access, and researching Next.js 15 routing features._
