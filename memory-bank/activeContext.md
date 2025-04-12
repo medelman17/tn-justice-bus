@@ -1,11 +1,12 @@
 # Active Context: Tennessee Justice Bus Pre-Visit Screening
 
-**Date:** April 12, 2025
+**Date:** April 12, 2025 (Updated)
 
 ## 1. Current Focus
 
 - **Initializing Project**: Setting up the foundational structure and documentation for the Tennessee Justice Bus Pre-Visit Screening application.
 - **Memory Bank Initialization**: Creating the core Memory Bank documents (`projectBrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`, `progress.md`) based on the provided project brief, PRD, and TDD.
+- **GitHub Repository Setup**: Created a public GitHub repository for the project and pushed initial documentation.
 
 ## 2. Recent Changes
 
@@ -15,12 +16,17 @@
   - `systemPatterns.md` created, detailing the JAMstack/Vercel architecture.
   - `techContext.md` created, listing the specific technologies and constraints.
   - This file (`activeContext.md`) created.
+- **Repository Setup**:
+  - Created new public GitHub repository at https://github.com/medelman17/tn-justice-bus
+  - Added appropriate `.gitignore` file for Next.js projects
+  - Pushed initial documentation and Memory Bank files
 
 ## 3. Immediate Next Steps
 
-1.  **Complete Memory Bank**: Create `progress.md` to establish the baseline project status.
+1.  ~~**Complete Memory Bank**: Create `progress.md` to establish the baseline project status.~~ ✓
 2.  **Begin Phase 1 (Foundation)**:
-    - Set up the Next.js project repository on Vercel.
+    - Initialize the Next.js project structure in the repository
+    - Set up the deployment on Vercel platform
     - Implement the core database schema in Vercel Postgres based on `justice-bus-tdd.md`.
     - Set up the authentication system using NextAuth.js.
     - Establish basic user management functionality.
