@@ -41,7 +41,7 @@ export default function SignInPage() {
               </CardContent>
               <CardFooter className="flex flex-col space-y-4">
                 <div className="text-sm text-muted-foreground">
-                  Don't have an account yet?{" "}
+                  Don&apos;t have an account yet?{" "}
                   <Link
                     href="/auth/signup"
                     className="text-primary underline-offset-4 hover:underline"
@@ -65,7 +65,7 @@ export default function SignInPage() {
               </CardContent>
               <CardFooter className="flex flex-col space-y-4">
                 <div className="text-sm text-muted-foreground">
-                  Don't have an account yet?{" "}
+                  Don&apos;t have an account yet?{" "}
                   <Link
                     href="/auth/signup"
                     className="text-primary underline-offset-4 hover:underline"

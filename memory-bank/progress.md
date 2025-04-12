@@ -1,6 +1,6 @@
 # Project Progress: Tennessee Justice Bus Pre-Visit Screening
 
-**Date:** April 12, 2025 (Updated - UI Components and Authentication Implementation)
+**Date:** April 12, 2025 (Updated - UI Components, Authentication Implementation, and Next.js 15 Routing Research)
 
 ## 1. Current Status: Foundation Phase
 
@@ -21,6 +21,7 @@ The project has completed the initial setup, bootstrapping, database implementat
   - `techContext.md` (Created)
   - `activeContext.md` (Created)
   - `progress.md` (This file - Created)
+  - `next-js-15-routing.md` (Created - Documenting Next.js 15 routing features)
 - **Technology Decisions**:
   - Selected Supabase PostgreSQL as the database provider (configured in `.env.local`)
   - Chose Knock for SMS notifications and messaging workflows (configured in `.env.local`)
@@ -43,6 +44,7 @@ The project has completed the initial setup, bootstrapping, database implementat
 - Setting up Knock integration for functional SMS notifications
 - Implementing client intake form flows
 - Setting up Vercel deployment through GitHub connector
+- Researching Next.js 15 routing features for potential application improvements
 
 ## 3.1 Database Integration (Completed)
 
@@ -144,5 +146,7 @@ The project has completed the initial setup, bootstrapping, database implementat
 - **[2025-04-12]**: Decision to follow detailed authentication implementation plan created in `implementation-plan-auth.md`.
 - **[2025-04-12]**: Decision to create a type-safe application with custom type definitions.
 - **[2025-04-12]**: Decision to use middleware-based protection for authenticated routes.
+- **[2025-04-12]**: Conducted research on Next.js 15 routing features (particularly Dynamic Routes, Intercepting Routes, Error Handling, and Loading UI) to evaluate potential application improvements for the offline-first requirement.
+- **[2025-04-12]**: Discovered that Next.js 15 changes page component props (params and searchParams) from synchronous to Promise-based, which would require significant updates to all page components during future migration.
 
-_This document reflects the project progress after implementing the database schema, installing UI components, and implementing the authentication system._
+_This document reflects the project progress after implementing the database schema, installing UI components, implementing the authentication system, and researching Next.js 15 routing features._

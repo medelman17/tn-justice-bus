@@ -1,40 +1,44 @@
-import NextAuth, { DefaultSession } from "next-auth";
+import { DefaultSession, DefaultUser } from "next-auth";
 import { JWT } from "next-auth/jwt";
 
 declare module "next-auth" {
   /**
-   * Extend the built-in User type with custom fields
-   */
-  interface User {
-    id: string;
-    phone?: string | null;
-    email?: string | null;
-    firstName?: string | null;
-    lastName?: string | null;
-    preferredContactMethod?: string | null;
-    lastLogin?: Date | null;
-  }
-
-  /**
-   * Extend the session object to include custom properties
+   * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
   interface Session {
     user: {
+      /** The user's unique identifier */
       id: string;
+      /** The user's phone number if available */
       phone?: string | null;
-      email?: string | null;
-      name?: string | null;
-      image?: string | null;
     } & DefaultSession["user"];
+  }
+
+  /**
+   * User object returned by OAuth providers, Credentials, or database adapter
+   */
+  interface User extends DefaultUser {
+    /** The user's phone number if available */
+    phone?: string | null;
+    /** User's first name if available */
+    firstName?: string | null;
+    /** User's last name if available */
+    lastName?: string | null;
+    /** User's preferred contact method */
+    preferredContactMethod?: string;
+    /** Timestamp of last login */
+    lastLogin?: Date;
   }
 }
 
 declare module "next-auth/jwt" {
-  /** Extend the JWT token */
+  /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
   interface JWT {
+    /** The user's ID */
     id: string;
+    /** The user's phone number if available */
     phone?: string | null;
-    email?: string | null;
+    /** The JWT creation time */
     iat?: number;
   }
 }

@@ -8,12 +8,13 @@ export const metadata: Metadata = {
   description: "Verify your email to continue",
 };
 
-export default function VerifyPage({
+export default async function VerifyPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const verificationType = searchParams.type || "email";
+  const params = await searchParams;
+  const verificationType = params.type || "email";
 
   return (
     <div className="container flex h-screen w-full max-w-[500px] flex-col items-center justify-center">

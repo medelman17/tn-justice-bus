@@ -1,6 +1,6 @@
 # Active Context: Tennessee Justice Bus Pre-Visit Screening
 
-**Date:** April 12, 2025 (Updated - UI Components and Authentication Implementation)
+**Date:** April 12, 2025 (Updated - UI Components, Authentication Implementation, and Next.js 15 Routing Research)
 
 ## 1. Current Focus
 
@@ -17,12 +17,13 @@
 
 ## 2. Recent Changes
 
-- **Memory Bank Creation**:
+- **Memory Bank Creation and Updates**:
   - `projectBrief.md` was provided.
   - `productContext.md` created, outlining the 'why' and user goals.
   - `systemPatterns.md` created, detailing the JAMstack/Vercel architecture.
   - `techContext.md` created, listing the specific technologies and constraints.
   - This file (`activeContext.md`) created.
+  - `next-js-15-routing.md` created, documenting Next.js 15 routing features and implications.
 - **Technology Decisions**:
   - Selected Supabase PostgreSQL as the database provider (replacing Vercel Postgres)
   - Chose Knock for SMS notifications and messaging workflows (replacing Twilio)
@@ -80,7 +81,7 @@
 
 ## 4. Active Decisions & Considerations
 
-- **Technology Stack**: Confirmed commitment to Next.js 14+, Vercel platform (for deployment, KV, Blob), Supabase (for PostgreSQL database), Knock (for SMS), TypeScript, Tailwind CSS, Shadcn UI, NextAuth.js, and Claude AI.
+- **Technology Stack**: Confirmed commitment to Next.js 14+, Vercel platform (for deployment, KV, Blob), Supabase (for PostgreSQL database), Knock (for SMS), TypeScript, Tailwind CSS, Shadcn UI, NextAuth.js, and Claude AI. Researched Next.js 15 routing features for potential future upgrade.
 - **Package Manager**: Using `pnpm` as requested.
 - **Architecture**: Adhering to the JAMstack and serverless patterns outlined in `systemPatterns.md`.
 - **State Management**: Leaning towards React Query/SWR for server state, Context API for global UI state (needs final confirmation between React Query/SWR if both aren't used).
@@ -100,5 +101,7 @@
 - The Vercel ecosystem is central to the technical strategy.
 - Addressing rural connectivity challenges (offline-first) is a core technical challenge.
 - Balancing AI assistance with legal/ethical constraints is critical.
+- Next.js 15's routing features (especially Error Handling, Loading States, and Intercepting Routes) align well with our offline-first requirements and could enhance the user experience in low-connectivity environments.
+- Next.js 15 changes page component props from synchronous to Promise-based, which would require updating all existing page components during migration.
 
-_This document reflects the project state after bootstrapping the Next.js application._
+_This document reflects the project state after bootstrapping the Next.js application and researching Next.js 15 routing features._

@@ -12,8 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-// Import the necessary types without using the enum directly
-import type { PreferredContactMethod } from "@/types/app";
+// No import needed - enums are directly used from zod.enum
 
 // Sign up form schema
 const signUpSchema = z.object({
