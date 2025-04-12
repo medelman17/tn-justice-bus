@@ -1,7 +1,9 @@
-import type { NextAuthOptions } from "next-auth";
+import type { NextAuthOptions, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import EmailProvider from "next-auth/providers/email";
 import { SupabaseAdapter } from "@auth/supabase-adapter";
+import type { JWT } from "next-auth/jwt";
+import type { Session } from "next-auth";
 
 // Import our db utilities
 import { db } from "@/lib/db";
@@ -97,7 +99,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }: { token: any; user?: any }) {
+    async jwt({ token, user }) {
       // Initial sign in
       if (user) {
         token.id = user.id;
@@ -112,7 +114,7 @@ export const authOptions: NextAuthOptions = {
 
       return token;
     },
-    async session({ session, token }: { session: any; token: any }) {
+    async session({ session, token }) {
       if (token && session.user) {
         session.user.id = token.id;
 
@@ -129,7 +131,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   events: {
-    async signIn({ user }: { user: any }) {
+    async signIn({ user }: { user: User }) {
       // Update last_login timestamp
       if (user?.id) {
         try {

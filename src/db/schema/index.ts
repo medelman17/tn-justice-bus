@@ -1,13 +1,13 @@
 import { pgSchema } from "drizzle-orm/pg-core";
 
 // Import all schema entities to expose to drizzle-kit
-import { users } from "./users";
-import { cases } from "./cases";
-import { justiceBusVisits } from "./justice-bus-visits";
-import { appointments } from "./appointments";
-import { documents } from "./documents";
-import { intakeResponses } from "./intake-responses";
-import { clientSessions } from "./client-sessions";
+// import { users } from "./users";
+// import { cases } from "./cases";
+// import { justiceBusVisits } from "./justice-bus-visits";
+// import { appointments } from "./appointments";
+// import { documents } from "./documents";
+// import { intakeResponses } from "./intake-responses";
+// import { clientSessions } from "./client-sessions";
 import {
   preferredContactMethodEnum,
   casePriorityEnum,
@@ -21,13 +21,13 @@ export const authSchema = pgSchema("auth");
 // Export everything for drizzle-kit migrations
 export {
   // Tables
-  users,
-  cases,
-  justiceBusVisits,
-  appointments,
-  documents,
-  intakeResponses,
-  clientSessions,
+  // users,
+  // cases,
+  // justiceBusVisits,
+  // appointments,
+  // documents,
+  // intakeResponses,
+  // clientSessions,
 
   // Enums
   preferredContactMethodEnum,
