@@ -3,7 +3,7 @@ import { legalIntake } from "@/mastra";
 import { createId } from "@paralleldrive/cuid2";
 
 // Note: Temporarily simplified to avoid auth checks during development
-// import { auth } from "@/auth";
+import { auth } from "@/auth";
 import { NextRequest } from "next/server";
 
 // Using Node.js runtime instead of edge runtime due to compatibility issues with Mastra dependencies
@@ -11,10 +11,10 @@ import { NextRequest } from "next/server";
 export async function POST(req: NextRequest) {
   try {
     // Authentication check is temporarily disabled for development
-    // const session = await auth();
-    // if (!session || !session.user) {
-    //   return Response.json({ error: "Unauthorized" }, { status: 401 });
-    // }
+    const session = await auth();
+    if (!session || !session.user) {
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     // Parse request body
     const { messages }: { messages: AIMessage[] } = await req.json();
