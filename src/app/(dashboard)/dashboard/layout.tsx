@@ -58,6 +58,8 @@ function DashboardContent({ children }: DashboardLayoutProps) {
     { icon: <FileText size={20} />, label: "Documents", href: "/dashboard/documents" },
     { icon: <Bell size={20} />, label: "Notifications", href: "/dashboard/notifications-test" },
     { icon: <Settings size={20} />, label: "Settings", href: "/dashboard/settings" },
+    // Admin section
+    { icon: <UserRound size={20} />, label: "User Management", href: "/dashboard/admin/users" },
   ];
 
   return (

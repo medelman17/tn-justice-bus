@@ -1,5 +1,5 @@
 import { AppointmentNotificationTester } from "@/components/notifications/ApptNotificationTester";
-import { auth } from "../../../../../auth";
+import { auth } from "../../../../auth";
 import { redirect } from "next/navigation";
 
 /**
