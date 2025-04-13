@@ -14,12 +14,40 @@
 - **~~Authentication Upgrade~~**: ✓ Successfully migrated to NextAuth.js v5 with edge compatibility
 - **~~Justice Bus Events~~**: ✓ Implemented events tracking system with flexible JSONB storage, validation, and offline support
 - **Core Feature Implementation**: Building application foundation components
-  - **Client Intake Forms**: Building intake forms for client information
+  - **~~Client Intake System~~**: ✓ Implemented AI-powered client intake with Mastra framework
   - **~~Offline Support~~**: ✓ Implemented robust offline capabilities with service workers
   - **~~Notification System~~**: ✓ Implemented Knock SMS notifications with offline support
 - **Memory Bank Maintenance**: Keeping documentation aligned with project progress
 
 ## 2. Recent Changes
+
+- **Client Intake System Implementation**:
+
+  - Implemented AI-powered legal intake system using Mastra framework:
+    - Created `src/mastra` directory structure with agents, tools, and workflows
+    - Implemented legal intake agent with Claude 3 Sonnet model integration
+    - Built intake workflow for guided legal issue identification and document preparation
+    - Created detailed issue type categorization system (housing, family, consumer, benefits, employment)
+    - Implemented document recommendations based on legal issue type
+    - Developed urgency assessment system for prioritizing critical cases
+  - Created conversational UI components for intake system:
+    - Implemented `ClientIntake` component with responsive chat interface
+    - Added offline detection and status indicators
+    - Created special message formatting for document lists and recommendations
+    - Built streaming response handling for improved user experience
+    - Added loading indicators and error handling
+  - Developed API endpoints for AI integration:
+    - Created `/api/chat/intake` route for communication with Mastra agent
+    - Implemented secure message handling with auth checks
+    - Added streaming response capabilities
+    - Built proper error handling and status codes
+  - Added new intake process to dashboard:
+    - Created `/dashboard/intake` page with detailed instructions
+    - Updated dashboard navigation to include Legal Intake link
+    - Integrated with existing UI components and styles
+  - Implemented proper environment setup:
+    - Added necessary dependencies (ai@4.2.0, @ai-sdk/anthropic, @mastra/core)
+    - Configured proper imports and API keys
 
 - **Justice Bus Events Implementation**:
 

@@ -11,6 +11,7 @@ const withPWA = withSerwist({
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   // Ensure TypeScript errors don't prevent builds
+  serverExternalPackages: ["@mastra/*"],
   typescript: {
     // This doesn't mean that we're ignoring typcript errors,
     // but rather allowing the build to complete even with errors

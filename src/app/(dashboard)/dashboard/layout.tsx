@@ -52,6 +52,7 @@ function DashboardContent({ children }: DashboardLayoutProps) {
     { icon: <LayoutDashboard size={20} />, label: "Dashboard", href: "/dashboard" },
     { icon: <UserRound size={20} />, label: "Profile", href: "/dashboard/profile" },
     { icon: <Briefcase size={20} />, label: "Cases", href: "/dashboard/cases" },
+    { icon: <FileText size={20} />, label: "Legal Intake", href: "/dashboard/intake" },
     { icon: <Calendar size={20} />, label: "Events", href: "/dashboard/events" },
     { icon: <Calendar size={20} />, label: "Appointments", href: "/dashboard/appointments" },
     { icon: <FileText size={20} />, label: "Documents", href: "/dashboard/documents" },
