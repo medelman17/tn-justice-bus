@@ -1,6 +1,6 @@
 "use client";
 
-import { useChat } from "ai/react";
+import { useChat } from "@ai-sdk/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Send, Loader2 } from "lucide-react";
@@ -18,7 +18,7 @@ export function DashboardChat() {
     input,
     handleInputChange,
     handleSubmit,
-    isLoading,
+    status,
     error: chatError,
   } = useChat({
     api: "/api/chat/intake",
@@ -120,14 +120,21 @@ export function DashboardChat() {
           value={input}
           onChange={handleInputChange}
           placeholder="Type your message..."
-          disabled={isLoading || !isOnline}
+          disabled={
+            status === "streaming" || status === "submitted" || !isOnline
+          }
           className="flex-1"
         />
         <Button
           type="submit"
-          disabled={isLoading || !input.trim() || !isOnline}
+          disabled={
+            status === "streaming" ||
+            status === "submitted" ||
+            !input.trim() ||
+            !isOnline
+          }
         >
-          {isLoading ? (
+          {status === "streaming" || status === "submitted" ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
             <Send className="h-4 w-4" />
