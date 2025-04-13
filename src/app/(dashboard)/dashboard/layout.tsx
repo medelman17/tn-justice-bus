@@ -233,8 +233,8 @@ function DashboardContent({ children }: DashboardLayoutProps) {
       </div>
 
       {/* Main Content */}
-      <div className={`flex-1 overflow-auto transition-all duration-300 md:ml-${isSidebarOpen ? '64' : '20'}`}>
-        <div className="container mx-auto p-4 pt-16 md:p-8 md:pt-8">
+      <div className={`flex-1 overflow-auto transition-all duration-300 ${isSidebarOpen ? 'md:ml-64' : 'md:ml-20'}`}>
+        <div className="p-4 pt-16 md:p-8 md:pt-8">
           {children}
         </div>
       </div>

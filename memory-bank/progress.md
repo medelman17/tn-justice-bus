@@ -166,5 +166,7 @@ The project has completed the initial setup, bootstrapping, database implementat
 - **[2025-04-12]**: Decision to centralize technical implementation guides in the docs/ directory with a consistent format.
 - **[2025-04-12]**: Updated .clinerules to explicitly allow research-oriented MCP tools in both PLAN and ACT modes.
 - **[2025-04-12]**: Implemented Next.js 15 Route Groups for improved code organization while maintaining the original URL structure.
+- **[2025-04-12]**: Refined UI for "How We Help You Prepare" features section with modern interactive card components, hover effects, and improved visual hierarchy.
+- **[2025-04-12]**: Enhanced Impact statistics section with improved centering, consistent sizing, and better responsiveness.
 
 This document reflects the project progress after completing the NextAuth.js v5 migration, implementing all the necessary changes to ensure edge compatibility, and updating the memory bank to reflect this milestone.

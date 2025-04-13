@@ -102,51 +102,67 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 mt-12">
-              <Card className="flex flex-col items-center text-center">
-                <CardHeader>
-                  <MessageSquare className="h-12 w-12 text-primary mb-2" />
-                  <CardTitle>Virtual Intake Assistant</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>
+            <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4 mt-12">
+              <div className="group relative overflow-hidden rounded-xl border bg-background p-6 shadow-sm transition-all hover:shadow-md hover:translate-y-[-5px]">
+                <div className="absolute top-0 left-0 h-1 w-full bg-primary/70 rounded-t-xl"></div>
+                <div className="flex flex-col items-center text-center h-full">
+                  <div className="mb-4 rounded-full bg-primary/10 p-3">
+                    <MessageSquare className="h-10 w-10 text-primary" />
+                  </div>
+                  <h3 className="mb-2 text-xl font-bold">Virtual Intake Assistant</h3>
+                  <p className="text-muted-foreground">
                     Guided conversation to collect your information and understand your legal needs.
-                  </CardDescription>
-                </CardContent>
-              </Card>
-              <Card className="flex flex-col items-center text-center">
-                <CardHeader>
-                  <CheckCircle className="h-12 w-12 text-primary mb-2" />
-                  <CardTitle>Legal Issue Identifier</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>
+                  </p>
+                </div>
+              </div>
+              
+              <div className="group relative overflow-hidden rounded-xl border bg-background p-6 shadow-sm transition-all hover:shadow-md hover:translate-y-[-5px]">
+                <div className="absolute top-0 left-0 h-1 w-full bg-primary/70 rounded-t-xl"></div>
+                <div className="flex flex-col items-center text-center h-full">
+                  <div className="mb-4 rounded-full bg-primary/10 p-3">
+                    <CheckCircle className="h-10 w-10 text-primary" />
+                  </div>
+                  <h3 className="mb-2 text-xl font-bold">Legal Issue Identifier</h3>
+                  <p className="text-muted-foreground">
                     Helps identify and categorize your specific legal issues for better attorney matching.
-                  </CardDescription>
-                </CardContent>
-              </Card>
-              <Card className="flex flex-col items-center text-center">
-                <CardHeader>
-                  <FileText className="h-12 w-12 text-primary mb-2" />
-                  <CardTitle>Document Preparation</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>
+                  </p>
+                </div>
+              </div>
+              
+              <div className="group relative overflow-hidden rounded-xl border bg-background p-6 shadow-sm transition-all hover:shadow-md hover:translate-y-[-5px]">
+                <div className="absolute top-0 left-0 h-1 w-full bg-primary/70 rounded-t-xl"></div>
+                <div className="flex flex-col items-center text-center h-full">
+                  <div className="mb-4 rounded-full bg-primary/10 p-3">
+                    <FileText className="h-10 w-10 text-primary" />
+                  </div>
+                  <h3 className="mb-2 text-xl font-bold">Document Preparation</h3>
+                  <p className="text-muted-foreground">
                     Customized checklists of documents to bring to your consultation.
-                  </CardDescription>
-                </CardContent>
-              </Card>
-              <Card className="flex flex-col items-center text-center">
-                <CardHeader>
-                  <Calendar className="h-12 w-12 text-primary mb-2" />
-                  <CardTitle>Appointment Scheduler</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>
+                  </p>
+                </div>
+              </div>
+              
+              <div className="group relative overflow-hidden rounded-xl border bg-background p-6 shadow-sm transition-all hover:shadow-md hover:translate-y-[-5px]">
+                <div className="absolute top-0 left-0 h-1 w-full bg-primary/70 rounded-t-xl"></div>
+                <div className="flex flex-col items-center text-center h-full">
+                  <div className="mb-4 rounded-full bg-primary/10 p-3">
+                    <Calendar className="h-10 w-10 text-primary" />
+                  </div>
+                  <h3 className="mb-2 text-xl font-bold">Appointment Scheduler</h3>
+                  <p className="text-muted-foreground">
                     Book your consultation with the Justice Bus when it visits your community.
-                  </CardDescription>
-                </CardContent>
-              </Card>
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-16 flex justify-center">
+              <Link href="/auth/signup">
+                <Button size="lg" className="group">
+                  Get Started
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </Link>
             </div>
           </div>
         </section>
@@ -298,36 +314,26 @@ export default function Home() {
               </div>
             </div>
             <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-3 mt-12">
-              <Card className="flex flex-col items-center text-center">
-                <CardHeader>
-                  <CardTitle className="text-4xl font-bold">40+</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-lg">
-                    Rural counties served across Tennessee
-                  </CardDescription>
-                </CardContent>
-              </Card>
-              <Card className="flex flex-col items-center text-center">
-                <CardHeader>
-                  <CardTitle className="text-4xl font-bold">1,200+</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-lg">
-                    Clients assisted with legal services
-                  </CardDescription>
-                </CardContent>
-              </Card>
-              <Card className="flex flex-col items-center text-center">
-                <CardHeader>
-                  <CardTitle className="text-4xl font-bold">150+</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-lg">
-                    Volunteer attorneys participating
-                  </CardDescription>
-                </CardContent>
-              </Card>
+              <div className="flex h-full min-h-[180px] flex-col justify-center items-center rounded-lg border bg-card text-card-foreground shadow-sm p-8">
+                <h3 className="text-4xl font-bold mb-4">40+</h3>
+                <p className="text-muted-foreground text-lg max-w-[200px]">
+                  Rural counties served across Tennessee
+                </p>
+              </div>
+              
+              <div className="flex h-full min-h-[180px] flex-col justify-center items-center rounded-lg border bg-card text-card-foreground shadow-sm p-8">
+                <h3 className="text-4xl font-bold mb-4">1,200+</h3>
+                <p className="text-muted-foreground text-lg max-w-[200px]">
+                  Clients assisted with legal services
+                </p>
+              </div>
+              
+              <div className="flex h-full min-h-[180px] flex-col justify-center items-center rounded-lg border bg-card text-card-foreground shadow-sm p-8">
+                <h3 className="text-4xl font-bold mb-4">150+</h3>
+                <p className="text-muted-foreground text-lg max-w-[200px]">
+                  Volunteer attorneys participating
+                </p>
+              </div>
             </div>
             <div className="mt-12 space-y-4">
               <Tabs defaultValue="testimonial1" className="w-full max-w-3xl mx-auto">
