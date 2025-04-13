@@ -618,6 +618,125 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 - [Knock Node.js SDK](https://docs.knock.app/sdks/javascript/overview)
 - [Twilio SMS Best Practices](https://www.twilio.com/docs/sms/tutorials/best-practices-for-sms)
 
+## Mastra Agent Integration
+
+The Knock notification system has been integrated with the Mastra AI agent framework to enable agent-triggered notifications across the intake workflow. This integration allows the conversational AI agent to notify users about document requirements, status updates, and attorney referrals.
+
+### Agent-Triggered Notifications
+
+The Mastra agent can trigger notifications through a custom tool implementation:
+
+```typescript
+// src/mastra/tools/notification-tool.ts
+import { createTool } from "@mastra/core/tools";
+import { z } from "zod";
+import { triggerNotification } from "../../lib/knock";
+
+export const notificationTool = createTool({
+  id: "send-notification",
+  description: "Send notification to client or attorney",
+  inputSchema: z.object({
+    recipientId: z.string().describe("User ID of the recipient"),
+    notificationType: z.enum([
+      "appointment-reminder",
+      "document-request",
+      "status-update",
+      "attorney-referral",
+    ]),
+    message: z.string().describe("Custom message content"),
+    priority: z.enum(["normal", "urgent"]).default("normal"),
+  }),
+  execute: async ({ recipientId, notificationType, message, priority }) => {
+    // Convert to our Knock workflow identifier
+    const workflowKey = `intake-${notificationType}`;
+
+    try {
+      const result = await triggerNotification({
+        userId: recipientId,
+        workflowKey,
+        data: {
+          message,
+          priority,
+          source: "mastra-agent",
+          timestamp: new Date().toISOString(),
+        },
+      });
+
+      return {
+        success: true,
+        notificationId: result.id,
+      };
+    } catch (error) {
+      // Handle offline case - queue for later
+      if (!navigator.onLine) {
+        // Add to our existing offline queue system
+        await queueOfflineNotification({
+          userId: recipientId,
+          workflowKey,
+          data: { message, priority, source: "mastra-agent" },
+        });
+
+        return {
+          success: true,
+          queued: true,
+          message: "Notification queued for delivery when online",
+        };
+      }
+
+      throw error;
+    }
+  },
+});
+```
+
+### Mastra-Specific Notification Workflows
+
+The following Knock workflows have been added specifically for the Mastra integration:
+
+1. **Document Request Notification** (`intake-document-request`)
+
+   - Triggered when the agent determines specific documents are needed
+   - Message content specifies document types and reasoning
+   - Can include document submission instructions and links
+
+2. **Status Update Notification** (`intake-status-update`)
+
+   - Communicates intake progress and next steps
+   - Used for long-running intake processes that span multiple sessions
+   - Provides clear context on where the client left off
+
+3. **Attorney Referral Notification** (`intake-attorney-referral`)
+   - Triggered when a case is flagged for urgent attorney review
+   - Sent to both client and available attorneys
+   - Includes case summary and urgency level
+
+### Cost Considerations for Agent-Triggered Notifications
+
+Given our focus on cost optimization, the following guardrails are in place for Mastra-triggered notifications:
+
+1. **Rate Limiting**
+
+   - Maximum of 5 automated notifications per client per day
+   - Cooldown period of 2 hours between similar notification types
+   - Priority-based bypass for urgent notifications
+
+2. **Message Templating**
+
+   - Standardized templates to ensure consistent messaging
+   - Parameterized content to minimize redundancy
+   - Pre-approved language for common scenarios
+
+3. **Notification Batching**
+
+   - Grouping of related notifications when possible
+   - Digest mode for non-urgent updates
+   - Scheduled delivery windows to minimize interruptions
+
+4. **Manual Override**
+   - Attorney review required for high-volume notification patterns
+   - Circuit breaker for unexpected notification spikes
+   - Opt-out capabilities for clients
+
 ---
 
 This guide is maintained by the Tennessee Justice Bus development team. Last updated: April 12, 2025.

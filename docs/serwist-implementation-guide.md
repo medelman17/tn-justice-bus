@@ -678,6 +678,282 @@ Consider implementing:
    - Maintain a regression test suite for offline functionality
    - Test on various devices and network conditions
 
+## Mastra Integration for Offline Support
+
+The Tennessee Justice Bus application integrates Serwist with the Mastra AI agent framework to enable comprehensive offline support for the client intake forms. This integration ensures that the AI-powered intake experience works seamlessly in rural areas with limited connectivity.
+
+### Service Worker Integration
+
+The service worker that powers offline support has been enhanced to specifically handle Mastra-related files and API routes:
+
+```typescript
+// Additional caching rules in sw-custom.ts
+
+// Cache Mastra agent resources
+const MASTRA_RESOURCES = [
+  "/mastra/agent-config.json",
+  "/api/mastra/workflows/legal-intake",
+  "/api/mastra/agents/intakeAgent",
+];
+
+// Precache Mastra resources
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll([...PRECACHE_ASSETS, ...MASTRA_RESOURCES]);
+    })
+  );
+});
+
+// Special handling for Mastra API routes
+if (event.request.url.includes("/api/mastra/")) {
+  event.respondWith(
+    fetch(event.request.clone())
+      .then((response) => {
+        // Clone and cache the response
+        const responseToCache = response.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseToCache);
+        });
+        return response;
+      })
+      .catch(() => {
+        // Specific fallback for Mastra API routes
+        return caches.match(event.request).then((cachedResponse) => {
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+
+          // Create a custom response based on the API type
+          if (event.request.url.includes("/api/mastra/agents/")) {
+            return new Response(
+              JSON.stringify({
+                status: "offline",
+                message:
+                  "Using offline agent capabilities. Some features may be limited.",
+              }),
+              {
+                headers: { "Content-Type": "application/json" },
+              }
+            );
+          }
+
+          // Generic fallback
+          return new Response(
+            JSON.stringify({
+              status: "offline",
+              error: "This feature requires internet connection",
+            }),
+            {
+              headers: { "Content-Type": "application/json" },
+            }
+          );
+        });
+      })
+  );
+  return;
+}
+```
+
+### Workflow State Persistence
+
+Mastra workflows maintain state locally to allow resumption even when offline:
+
+```typescript
+// src/lib/offline-mastra.ts
+import { openDB } from "idb";
+import { WorkflowRun } from "@mastra/core/workflow";
+
+const DB_NAME = "justice-bus-offline";
+const STORE_WORKFLOWS = "workflows";
+const STORE_INTERACTIONS = "interactions";
+const STORE_SYNC_QUEUE = "sync-queue";
+
+// Initialize IndexedDB
+export async function initMastraOfflineDB() {
+  return openDB(DB_NAME, 1, {
+    upgrade(db) {
+      // Store workflow state
+      db.createObjectStore(STORE_WORKFLOWS, { keyPath: "id" });
+
+      // Store agent interactions
+      db.createObjectStore(STORE_INTERACTIONS, { keyPath: "id" });
+
+      // Store sync queue for completed workflows
+      db.createObjectStore(STORE_SYNC_QUEUE, {
+        keyPath: "id",
+        autoIncrement: true,
+      });
+    },
+  });
+}
+
+// Save workflow state for offline resumption
+export async function saveWorkflowState(workflowId: string, state: any) {
+  const db = await initMastraOfflineDB();
+  return db.put(STORE_WORKFLOWS, {
+    id: workflowId,
+    state,
+    updatedAt: new Date().toISOString(),
+  });
+}
+```
+
+### Vector Database Caching
+
+To support Mastra's RAG capabilities offline, we implement a local vector database cache:
+
+```typescript
+// src/lib/offline-rag.ts
+import { openDB } from "idb";
+
+const RAG_DB_NAME = "tn-legal-knowledge";
+const VECTOR_STORE = "vector-embeddings";
+
+/**
+ * Initialize the local vector database for offline RAG support
+ */
+export async function initVectorDB() {
+  return openDB(RAG_DB_NAME, 1, {
+    upgrade(db) {
+      const store = db.createObjectStore(VECTOR_STORE, { keyPath: "id" });
+      // Create indexes for fast retrieval
+      store.createIndex("category", "metadata.category");
+      store.createIndex("updated", "updatedAt");
+    },
+  });
+}
+
+/**
+ * Cache vector embeddings for offline use
+ */
+export async function cacheVectorEmbeddings(embeddings: any[]) {
+  const db = await initVectorDB();
+  const tx = db.transaction(VECTOR_STORE, "readwrite");
+
+  for (const embedding of embeddings) {
+    await tx.store.put({
+      ...embedding,
+      updatedAt: new Date().toISOString(),
+    });
+  }
+
+  await tx.done;
+  console.log(`Cached ${embeddings.length} embeddings for offline use`);
+}
+
+/**
+ * Perform vector similarity search offline
+ */
+export async function offlineVectorSearch(
+  queryVector: number[],
+  topK: number = 3
+) {
+  const db = await initVectorDB();
+  const embeddings = await db.getAll(VECTOR_STORE);
+
+  // Simple cosine similarity implementation
+  const results = embeddings
+    .map((embedding) => ({
+      ...embedding,
+      similarity: cosineSimilarity(queryVector, embedding.values),
+    }))
+    .sort((a, b) => b.similarity - a.similarity)
+    .slice(0, topK);
+
+  return results;
+}
+
+// Calculate cosine similarity between two vectors
+function cosineSimilarity(a: number[], b: number[]): number {
+  let dotProduct = 0;
+  let normA = 0;
+  let normB = 0;
+
+  for (let i = 0; i < a.length; i++) {
+    dotProduct += a[i] * b[i];
+    normA += a[i] * a[i];
+    normB += b[i] * b[i];
+  }
+
+  return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+}
+```
+
+### Offline-First Agent Interface
+
+To seamlessly transition between online and offline agent capabilities:
+
+```typescript
+// src/components/intake/MastraAgentInterface.tsx
+
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useOnlineStatus } from '@/hooks/use-online-status';
+
+export function MastraAgentInterface() {
+  const [messages, setMessages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const isOnline = useOnlineStatus();
+
+  // Add message and get response from agent
+  async function sendMessage(content: string) {
+    setIsLoading(true);
+
+    // Add user message to state
+    setMessages(prev => [...prev, { role: 'user', content }]);
+
+    try {
+      // If online, use full agent capabilities
+      if (isOnline) {
+        const response = await fetch('/api/mastra/agents/intakeAgent/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            messages: [...messages, { role: 'user', content }]
+          }),
+        });
+
+        const data = await response.json();
+        setMessages(prev => [...prev, { role: 'assistant', content: data.text }]);
+      } else {
+        // If offline, use cached responses or simplified agent
+        const offlineResponse = await getOfflineAgentResponse(content, messages);
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: offlineResponse,
+          isOfflineGenerated: true
+        }]);
+      }
+    } catch (error) {
+      console.error('Error interacting with agent:', error);
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: 'I apologize, but I encountered an error. If you\'re offline, some advanced features may be limited.',
+        isError: true
+      }]);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  return (
+    <div className="p-4 border rounded-lg">
+      {!isOnline && (
+        <div className="bg-amber-50 text-amber-800 p-2 mb-4 rounded text-sm">
+          You're currently offline. Basic intake features will work, but some advanced capabilities are limited.
+        </div>
+      )}
+
+      {/* Message display and input components */}
+    </div>
+  );
+}
+```
+
+This integration ensures that clients can continue their intake process regardless of connectivity status, with graceful degradation of features when offline.
+
 ---
 
 This guide is maintained by the Tennessee Justice Bus development team. Last updated: April 12, 2025.
