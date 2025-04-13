@@ -94,7 +94,15 @@ graph TD
       - Background synchronization when connectivity is restored
       - Online/offline state detection and appropriate UI feedback
       - Conflict resolution strategies
-10. **AI Integration**: Dedicated API routes (`/api/v1/ai/...`) to interact with the Anthropic API (Claude), encapsulating prompt engineering and context management.
+10. **AI Integration**:
+    - Dedicated API routes (`/api/chat/intake`) to interact with the Anthropic API (Claude)
+    - **Mastra Framework Pattern**: Structured AI agent framework for legal intake:
+      - Properly typed agent definitions with `Agent` imported from "@mastra/core/agent"
+      - Tool actions using Zod schema validation for input/output
+      - Models typed as `ReturnType<typeof anthropic>` for type safety
+      - Anthropic integration specifically with Claude 3 Sonnet model
+      - Clear separation of agent configuration from implementation
+    - Encapsulated prompt engineering and context management within agent definitions
 11. **Deployment Strategy**:
     - GitHub integration with Vercel for continuous deployment
     - Automatic preview deployments for pull requests
