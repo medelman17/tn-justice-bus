@@ -6,6 +6,18 @@ This directory contains comprehensive documentation for the Tennessee Justice Bu
 
 ## Documentation Index
 
+### [User Personas and Access Patterns](./user-personas-and-access-patterns.md)
+
+A comprehensive guide defining the key user groups and their interaction patterns:
+
+- Detailed personas for Rural Tennessee Residents, Volunteer Attorneys, Justice Bus Coordinators, and Community Partners
+- Key access patterns for pre-visit preparation, appointment management, legal issue assessment, and more
+- Implementation considerations for each user type and access pattern
+- Current implementation status and next steps for each feature area
+- Priority matrix for future development planning
+
+This document serves as a foundational reference for understanding user needs and designing appropriate features.
+
 ### [Serwist Implementation Guide](./serwist-implementation-guide.md)
 
 A comprehensive technical guide covering:
@@ -158,8 +170,14 @@ If you're new to the project:
    - Examine the source code in `/src/lib/knock.ts` and notification-related API routes
 
 3. For client intake system:
+
    - Review the [Mastra Implementation Guide](./mastra-implementation-guide.md) for the AI-powered intake approach
    - Once implemented, examine the code in `/src/app/intake` and related components
+
+4. For understanding user needs:
+   - Start with the [User Personas and Access Patterns](./user-personas-and-access-patterns.md) document
+   - Use this as a reference when designing new features or enhancing existing ones
+   - Refer to the priority matrix when planning development work
 
 ## Contributing to Documentation
 

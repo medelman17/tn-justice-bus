@@ -1,6 +1,6 @@
 # Tennessee Justice Bus Pre-Visit Client Screening Application
 
-A Next.js application to enhance the Tennessee Justice Bus initiative by providing pre-visit client screening and preparation. This application helps maximize the impact of Justice Bus visits by improving client preparation and streamlining the intake process.
+A Next.js application to enhance the Tennessee Justice Bus initiative by providing pre-visit client screening and preparation. This application helps maximize the impact of Justice Bus visits by improving client preparation and streamlining the intake process, with a focus on rural areas that often have limited connectivity.
 
 ## Project Overview
 
@@ -24,20 +24,35 @@ The Tennessee Justice Bus brings free legal services to rural "legal deserts" ac
 
 - **Frontend**: Next.js 14+ (App Router), TypeScript, Tailwind CSS, Shadcn UI
 - **Backend**: Next.js API Routes, Vercel Serverless Functions
-- **Database**: Vercel Postgres
+- **Database**: Supabase PostgreSQL with Drizzle ORM
 - **Storage**: Vercel Blob Storage for document files
 - **Caching**: Vercel KV (Redis) for session management and caching
-- **AI**: Anthropic's Claude API for conversational assistance
-- **Authentication**: NextAuth.js
+- **AI**: Anthropic's Claude API (Claude 3 Sonnet) with Mastra Framework
+- **Authentication**: NextAuth.js v5 with edge compatibility
+- **Notifications**: Knock SMS integration
+- **Offline Support**: Serwist (modern Workbox fork) for service workers
 - **Hosting**: Vercel Platform
 
 ## Key Features
 
-1. **Virtual Intake Assistant**: Conversational interface using Claude AI
+1. **Virtual Intake Assistant**: Conversational interface using Claude AI with robust offline support
 2. **Legal Issue Identifier**: Guided interview to identify specific legal issues
 3. **Document Preparation Guide**: Customized checklists based on issue type
-4. **Appointment Scheduler**: Integration with Justice Bus visit calendar
-5. **Offline Capabilities**: Service worker for offline functionality
+4. **Appointment Scheduler**: Integration with Justice Bus visit calendar and SMS notifications
+5. **Offline-First Architecture**: Comprehensive offline capabilities with background synchronization
+6. **Justice Bus Events Tracking**: Upcoming Justice Bus events with locations and details
+7. **SMS Notifications**: Integrated SMS notifications for appointment reminders and updates
+
+## User-Centered Design
+
+The application is designed around the needs of four key user personas:
+
+1. **Rural Tennessee Resident** - Primary end user with limited connectivity and legal knowledge
+2. **Volunteer Attorney** - Legal professional with limited volunteer time who needs prepared clients
+3. **Justice Bus Coordinator** - Program manager tracking metrics and organizing visits
+4. **Community Partner** - Local facilitator connecting community members to services
+
+These personas and their critical access patterns are comprehensively documented in `docs/user-personas-and-access-patterns.md`.
 
 ## Getting Started
 
@@ -46,6 +61,9 @@ The Tennessee Justice Bus brings free legal services to rural "legal deserts" ac
 - Node.js (v18+)
 - PNPM (`npm install -g pnpm`)
 - Git
+- Supabase account (for database)
+- Knock account (for SMS notifications)
+- Anthropic API key (for Claude AI)
 
 ### Installation
 
@@ -70,29 +88,37 @@ pnpm dev
 ```
 src/
 ├── app/                   # Next.js App Router
-│   ├── (auth)/            # Authentication routes
-│   ├── (dashboard)/       # Authenticated user routes
+│   ├── (auth)/            # Authentication route group
+│   │   └── auth/          # Auth pages (signin, signup, verify)
+│   ├── (dashboard)/       # Dashboard route group
+│   │   └── dashboard/     # Dashboard pages (profile, cases, events, intake)
+│   ├── (offline)/         # Offline functionality route group
 │   ├── api/               # API routes
+│   ├── sw.ts              # Service Worker entry point
 │   └── layout.tsx         # Root layout
 ├── components/
-│   ├── ui/                # Core UI components
-│   ├── forms/             # Form components
-│   ├── intake/            # Intake flow components
-│   ├── documents/         # Document management components
-│   ├── scheduling/        # Appointment scheduling components
-│   └── layout/            # Layout components
+│   ├── ui/                # Shadcn UI components
+│   ├── justice-bus/       # Justice Bus specific components
+│   └── notifications/     # Notification components
+├── db/
+│   └── schema/            # Drizzle ORM schema definitions
 ├── lib/
-│   ├── utils/             # Utility functions
-│   ├── hooks/             # Custom React hooks
-│   ├── validation/        # Zod validation schemas
-│   ├── db/                # Database client functions
-│   ├── ai/                # AI integration functions
-│   └── api/               # API client functions
-└── styles/
-    └── globals.css        # Global Tailwind styles
+│   ├── utils.ts           # Utility functions
+│   ├── knock.ts           # Knock SMS integration
+│   ├── offline-utils.ts   # Offline functionality utilities
+│   ├── events-offline.ts  # Offline events synchronization
+│   ├── validators/        # Zod validation schemas
+│   └── db/                # Database client
+├── mastra/                # Mastra AI framework integration
+│   ├── agents/            # AI agent definitions
+│   ├── tools/             # AI tool definitions
+│   └── workflows/         # Conversation workflows
+└── types/                 # TypeScript type definitions
 ```
 
-## Memory Bank Documentation
+## Documentation
+
+### Memory Bank
 
 This project utilizes a Memory Bank system for comprehensive documentation. The following files in the `memory-bank/` directory provide detailed project context:
 
@@ -103,14 +129,42 @@ This project utilizes a Memory Bank system for comprehensive documentation. The 
 - `activeContext.md`: Captures current work focus and important patterns
 - `progress.md`: Tracks what works, what's left to build, and current status
 
-Refer to these documents for detailed project information and context.
+### Technical Implementation Guides
+
+Detailed implementation guides are available in the `docs/` directory:
+
+- `user-personas-and-access-patterns.md`: Comprehensive documentation of user personas and access patterns
+- `serwist-implementation-guide.md`: Guide for offline functionality implementation
+- `pwa-concepts-guide.md`: Overview of Progressive Web App implementation
+- `knock-implementation-guide.md`: SMS notification system documentation
+- `mastra-implementation-guide.md`: AI-powered client intake implementation
+- `nextjs15-routing-guide.md`: Next.js 15 routing features implementation
+- `nextauth-v5-migration-guide.md`: Authentication system migration guide
+- `sms-verification-enhancement-guide.md`: Phone verification system documentation
+- `route-groups-implementation.md`: Application route organization documentation
+
+See `docs/README.md` for a complete documentation index and additional resources.
+
+## Development Status
+
+The project is currently in Phase 1 (Foundation) and has completed several key milestones:
+
+✅ Project setup with Next.js, TypeScript, and Tailwind CSS  
+✅ Database schema implementation with Drizzle ORM and Supabase PostgreSQL  
+✅ Authentication system with NextAuth.js v5 and edge compatibility  
+✅ Offline-first architecture using Serwist for service workers  
+✅ User dashboard with profile and case management  
+✅ Justice Bus events tracking system with offline support  
+✅ SMS notification system with Knock integration  
+✅ AI-powered client intake system with Mastra framework  
+✅ Phone verification system with secure code storage
 
 ## Development Phases
 
-1. **Foundation** (Weeks 1-4): Project setup, database schema, authentication
-2. **Core Features** (Weeks 5-8): Intake flow, document management, basic AI assistance
-3. **Enhanced Features** (Weeks 9-12): Offline mode, advanced AI features, notifications
-4. **Optimization & Testing** (Weeks 13-16): Performance, accessibility, comprehensive testing
+1. **Foundation** (Weeks 1-4): Project setup, database schema, authentication, offline support (Current phase)
+2. **Core Features** (Weeks 5-8): Intake flow, document management, AI assistance, scheduling
+3. **Enhanced Features** (Weeks 9-12): Advanced offline capabilities, AI features, notifications, admin interface
+4. **Optimization & Testing** (Weeks 13-16): Performance, accessibility, comprehensive testing, security audit
 
 ## Contributing
 
