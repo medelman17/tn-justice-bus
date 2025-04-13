@@ -1,6 +1,5 @@
 import { AppointmentNotificationTester } from "@/components/notifications/ApptNotificationTester";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/auth";
+import { auth } from "../../../../../auth";
 import { redirect } from "next/navigation";
 
 /**
@@ -10,7 +9,7 @@ import { redirect } from "next/navigation";
  */
 export default async function NotificationsTestPage() {
   // Verify user is authenticated
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   
   if (!session || !session.user) {
     return redirect("/auth/signin?callbackUrl=/dashboard/notifications-test");

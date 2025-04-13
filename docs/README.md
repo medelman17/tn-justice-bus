@@ -79,6 +79,33 @@ A comprehensive guide covering Next.js 15 routing features and their application
 
 This document provides the technical guidance for leveraging Next.js 15's routing capabilities to enhance the application's performance in rural areas with limited connectivity.
 
+### [NextAuth.js v5 Migration Guide](./nextauth-v5-migration-guide.md)
+
+A comprehensive guide for migrating from NextAuth.js v4 to v5 with edge compatibility:
+
+- Key changes in NextAuth.js v5
+- Edge-compatible implementation strategy
+- Step-by-step migration instructions
+- TypeScript updates and environment variable changes
+- Testing strategies and troubleshooting tips
+- Rollback plan for risk mitigation
+
+This document provides a complete roadmap for upgrading our authentication system to support NextAuth.js v5 while ensuring edge compatibility.
+
+### [SMS Verification Enhancement Guide](./sms-verification-enhancement-guide.md)
+
+A detailed implementation plan for improving the SMS verification system:
+
+- Current implementation analysis and enhancement goals
+- Database schema for verification code storage
+- API routes for code generation and verification
+- Integration with Knock SMS notification service
+- Enhanced UI components for the verification flow
+- Offline support and security considerations
+- Testing and rollback strategies
+
+This document outlines a production-ready approach to SMS verification that improves security while maintaining our offline-first design principles.
+
 ### [Route Groups Implementation](./route-groups-implementation.md)
 
 A detailed explanation of the Next.js 15 Route Groups implementation in the Tennessee Justice Bus application:

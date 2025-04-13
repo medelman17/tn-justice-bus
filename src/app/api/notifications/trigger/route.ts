@@ -1,6 +1,5 @@
-import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { authOptions } from "@/app/api/auth/auth";
+import { auth } from "../../../../../auth";
 import {
   getKnockClient,
   NotificationPayload,
@@ -15,7 +14,7 @@ import {
 export async function POST(request: Request) {
   try {
     // Verify that the user is authenticated
-    const session = await getServerSession(authOptions);
+    const session = await auth();
 
     if (!session) {
       return NextResponse.json(
