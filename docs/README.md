@@ -61,6 +61,19 @@ A detailed guide for SMS notifications using Knock:
 
 This document provides the technical reference for implementing and maintaining SMS communications in the Justice Bus application.
 
+### [Knock Verification Workflow Guide](./knock-verification-workflow-guide.md)
+
+A specific guide for setting up the verification code workflow in Knock:
+
+- Current fallback implementation details
+- Step-by-step workflow setup instructions
+- Options for dashboard, API, and CLI-based workflow creation
+- Workflow data format and expected parameters
+- Testing procedures and troubleshooting steps
+- Guidance for removing the fallback mechanism once properly configured
+
+This document addresses the specific issue with missing Knock workflows for verification codes and provides a complete solution for proper implementation.
+
 ### [Mastra Implementation Guide](./mastra-implementation-guide.md)
 
 A detailed implementation plan for client intake forms using the Mastra AI agent framework:

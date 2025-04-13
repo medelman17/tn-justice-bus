@@ -1,0 +1,33 @@
+{
+  "key": "verification-code",
+  "name": "Verification Code",
+  "summary": "Sends verification codes for authentication",
+  "steps": [
+    {
+      "id": "sms-channel",
+      "type": "channel",
+      "config": {
+        "channel": "sms",
+        "template": "Your verification code is {{code}}. This code will expire in {{expiresInMinutes}} minutes."
+      }
+    },
+    {
+      "id": "email-channel",
+      "type": "channel",
+      "conditions": [
+        {
+          "variable": "channel",
+          "operator": "equals",
+          "value": "email"
+        }
+      ],
+      "config": {
+        "channel": "email",
+        "template": {
+          "subject": "Your Verification Code",
+          "body": "Your Tennessee Justice Bus verification code is: {{code}}. This code will expire in {{expiresInMinutes}} minutes."
+        }
+      }
+    }
+  ]
+}
