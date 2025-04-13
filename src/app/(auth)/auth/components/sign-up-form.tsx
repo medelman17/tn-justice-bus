@@ -181,151 +181,153 @@ export function SignUpForm() {
   }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={(e) => {
-          console.log("Form submit event triggered");
-          e.preventDefault(); // Prevent default form submission
+    <div className="w-full max-w-md mx-auto">
+      <Form {...form}>
+        <form
+          onSubmit={(e) => {
+            console.log("Form submit event triggered");
+            e.preventDefault(); // Prevent default form submission
 
-          // Trigger form validation
-          form.trigger().then((isValid) => {
-            console.log("Form validation result:", isValid);
-            if (isValid) {
-              // If valid, manually call the onSubmit handler with current values
-              const values = form.getValues();
-              onSubmit(values);
-            } else {
-              console.log("Form validation failed:", form.formState.errors);
-            }
-          });
-        }}
-        className="space-y-6"
-      >
-        {error && (
-          <Alert variant="destructive">
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-
-        <div className="grid grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="firstName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>First Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="John" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="lastName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Last Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Doe" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <div className="space-y-4">
-          <div className="mb-4">
-            <h3 className="text-sm font-medium mb-2">
-              Preferred Contact Method
-            </h3>
-            <Tabs
-              defaultValue="email"
-              value={contactMethod}
-              onValueChange={onContactMethodChange}
-              className="w-full"
-            >
-              <TabsList className="grid grid-cols-3 w-full">
-                <TabsTrigger value="email">Email</TabsTrigger>
-                <TabsTrigger value="phone">Phone Call</TabsTrigger>
-                <TabsTrigger value="sms">Text Message</TabsTrigger>
-              </TabsList>
-              <TabsContent value="email" className="pt-4">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email Address</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="email"
-                          placeholder="you@example.com"
-                          autoComplete="email"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </TabsContent>
-              <TabsContent value="phone" className="pt-4">
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Phone Number</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="tel"
-                          placeholder="(555) 123-4567"
-                          autoComplete="tel"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </TabsContent>
-              <TabsContent value="sms" className="pt-4">
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Mobile Number</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="tel"
-                          placeholder="(555) 123-4567"
-                          autoComplete="tel"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </TabsContent>
-            </Tabs>
-          </div>
-        </div>
-
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={isSubmitting}
-          onClick={() => console.log("Button clicked directly")}
+            // Trigger form validation
+            form.trigger().then((isValid) => {
+              console.log("Form validation result:", isValid);
+              if (isValid) {
+                // If valid, manually call the onSubmit handler with current values
+                const values = form.getValues();
+                onSubmit(values);
+              } else {
+                console.log("Form validation failed:", form.formState.errors);
+              }
+            });
+          }}
+          className="space-y-6"
         >
-          {isSubmitting ? "Creating Account..." : "Create Account"}
-        </Button>
-      </form>
-    </Form>
+          {error && (
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>First Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="John" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Doe" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="space-y-4">
+            <div className="mb-4">
+              <h3 className="text-sm font-medium mb-2">
+                Preferred Contact Method
+              </h3>
+              <Tabs
+                defaultValue="email"
+                value={contactMethod}
+                onValueChange={onContactMethodChange}
+                className="w-full"
+              >
+                <TabsList className="grid grid-cols-3 w-full">
+                  <TabsTrigger value="email">Email</TabsTrigger>
+                  <TabsTrigger value="phone">Phone Call</TabsTrigger>
+                  <TabsTrigger value="sms">Text Message</TabsTrigger>
+                </TabsList>
+                <TabsContent value="email" className="pt-4">
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email Address</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="email"
+                            placeholder="you@example.com"
+                            autoComplete="email"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </TabsContent>
+                <TabsContent value="phone" className="pt-4">
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Phone Number</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="tel"
+                            placeholder="(555) 123-4567"
+                            autoComplete="tel"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </TabsContent>
+                <TabsContent value="sms" className="pt-4">
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Mobile Number</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="tel"
+                            placeholder="(555) 123-4567"
+                            autoComplete="tel"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </TabsContent>
+              </Tabs>
+            </div>
+          </div>
+
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isSubmitting}
+            onClick={() => console.log("Button clicked directly")}
+          >
+            {isSubmitting ? "Creating Account..." : "Create Account"}
+          </Button>
+        </form>
+      </Form>
+    </div>
   );
 }

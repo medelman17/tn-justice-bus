@@ -103,7 +103,7 @@ export function EmailSignInForm() {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full max-w-md mx-auto">
       {/* Error message */}
       {error && (
         <Alert variant="destructive" className="mb-4">

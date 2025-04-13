@@ -171,7 +171,7 @@ export function PhoneSignInForm() {
   }
 
   return (
-    <>
+    <div className="w-full max-w-md mx-auto">
       {step === "phone" ? (
         <Form {...phoneForm}>
           <form
@@ -310,6 +310,6 @@ export function PhoneSignInForm() {
           </form>
         </Form>
       )}
-    </>
+    </div>
   );
 }
