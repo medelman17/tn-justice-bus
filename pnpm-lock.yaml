@@ -11,9 +11,6 @@ importers:
       '@ai-sdk/anthropic':
         specifier: ^1.2.9
         version: 1.2.9(zod@3.24.2)
-      '@auth/supabase-adapter':
-        specifier: ^1.8.0
-        version: 1.8.0(@supabase/supabase-js@2.49.4(bufferutil@4.0.9))(nodemailer@6.10.1)
       '@hookform/resolvers':
         specifier: ^5.0.1
         version: 5.0.1(react-hook-form@7.55.0(react@19.1.0))
@@ -376,25 +373,6 @@ packages:
         optional: true
       nodemailer:
         optional: true
-
-  '@auth/core@0.38.0':
-    resolution: {integrity: sha512-ClHl44x4cY3wfJmHLpW+XrYqED0fZIzbHmwbExltzroCjR5ts3DLTWzADRba8mJFYZ8JIEJDa+lXnGl0E9Bl7Q==}
-    peerDependencies:
-      '@simplewebauthn/browser': ^9.0.1
-      '@simplewebauthn/server': ^9.0.2
-      nodemailer: ^6.8.0
-    peerDependenciesMeta:
-      '@simplewebauthn/browser':
-        optional: true
-      '@simplewebauthn/server':
-        optional: true
-      nodemailer:
-        optional: true
-
-  '@auth/supabase-adapter@1.8.0':
-    resolution: {integrity: sha512-pxxzGW6lImiWAMufH5BrCr3W7Hk+TXyXs6bUy/TGL6CU99+xjU/VBHgJhDQrh8f91vSOoRInq9YkzB34ZBvgAA==}
-    peerDependencies:
-      '@supabase/supabase-js': ^2.43.1
 
   '@aws-crypto/crc32@3.0.0':
     resolution: {integrity: sha512-IzSgsrxUcsrejQbPVilIKy16kAT52EwB6zSaI+M3xxIhKh5+aldEyvI+z6erM7TCLB2BJsFrtHjp6/4/sr+3dA==}
@@ -4382,9 +4360,6 @@ packages:
   jose@5.10.0:
     resolution: {integrity: sha512-s+3Al/p9g32Iq+oqXxkW//7jk2Vig6FF1CFqzVXoTUXt2qz89YWbL+OwS17NFYEvxC35n0FKeGO2LGYSxeM2Gg==}
 
-  jose@6.0.10:
-    resolution: {integrity: sha512-skIAxZqcMkOrSwjJvplIPYrlXGpxTPnro2/QWTDCxAdWQrSTV5/KqspMWmi5WAx5+ULswASJiZ0a+1B/Lxt9cw==}
-
   joycon@3.1.1:
     resolution: {integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==}
     engines: {node: '>=10'}
@@ -5002,16 +4977,8 @@ packages:
     peerDependencies:
       preact: '>=10'
 
-  preact-render-to-string@6.5.11:
-    resolution: {integrity: sha512-ubnauqoGczeGISiOh6RjX0/cdaF8v/oDXIjO85XALCQjwQP+SB4RDXXtvZ6yTYSjG+PC1QRP2AhPgCEsM2EvUw==}
-    peerDependencies:
-      preact: '>=10'
-
   preact@10.11.3:
     resolution: {integrity: sha512-eY93IVpod/zG3uMF22Unl8h9KkrcKIRs2EGar8hwLZZDU1lkjph303V9HZBwufh2s736U6VXuhD109LYqPoffg==}
-
-  preact@10.24.3:
-    resolution: {integrity: sha512-Z2dPnBnMUfyQfSQ+GBdsGa16hz35YmLmtTLhM169uW944hYL6xzTYkJjC07j+Wosz733pMWx0fgON3JNw1jJQA==}
 
   preact@10.26.5:
     resolution: {integrity: sha512-fmpDkgfGU6JYux9teDWLhj9mKN55tyepwYbxHgQuIxbWQzgFg5vk7Mrrtfx7xRxq798ynkY4DDDxZr235Kk+4w==}
@@ -5865,25 +5832,6 @@ snapshots:
       preact-render-to-string: 5.2.3(preact@10.11.3)
     optionalDependencies:
       nodemailer: 6.10.1
-
-  '@auth/core@0.38.0(nodemailer@6.10.1)':
-    dependencies:
-      '@panva/hkdf': 1.2.1
-      jose: 6.0.10
-      oauth4webapi: 3.4.1
-      preact: 10.24.3
-      preact-render-to-string: 6.5.11(preact@10.24.3)
-    optionalDependencies:
-      nodemailer: 6.10.1
-
-  '@auth/supabase-adapter@1.8.0(@supabase/supabase-js@2.49.4(bufferutil@4.0.9))(nodemailer@6.10.1)':
-    dependencies:
-      '@auth/core': 0.38.0(nodemailer@6.10.1)
-      '@supabase/supabase-js': 2.49.4(bufferutil@4.0.9)
-    transitivePeerDependencies:
-      - '@simplewebauthn/browser'
-      - '@simplewebauthn/server'
-      - nodemailer
 
   '@aws-crypto/crc32@3.0.0':
     dependencies:
@@ -10504,8 +10452,6 @@ snapshots:
 
   jose@5.10.0: {}
 
-  jose@6.0.10: {}
-
   joycon@3.1.1: {}
 
   js-base64@3.7.2: {}
@@ -11088,13 +11034,7 @@ snapshots:
       preact: 10.26.5
       pretty-format: 3.8.0
 
-  preact-render-to-string@6.5.11(preact@10.24.3):
-    dependencies:
-      preact: 10.24.3
-
   preact@10.11.3: {}
-
-  preact@10.24.3: {}
 
   preact@10.26.5: {}
 

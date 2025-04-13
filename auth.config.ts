@@ -1,6 +1,5 @@
 import type { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-// EmailProvider removed from edge config as it's not edge-compatible
 
 export const authConfig: NextAuthConfig = {
   secret:
@@ -8,14 +7,15 @@ export const authConfig: NextAuthConfig = {
     process.env.NEXTAUTH_SECRET ||
     "temporary-secret-for-development",
   providers: [
-    // EmailProvider is removed here and only added in auth.ts, as it's not Edge compatible
+    // Phone authentication provider
     CredentialsProvider({
+      id: "phone-login",
       name: "Phone Number",
       credentials: {
         phone: { label: "Phone Number", type: "tel" },
         code: { label: "Verification Code", type: "text" },
       },
-      async authorize(credentials, request) {
+      async authorize(credentials) {
         if (!credentials?.phone || !credentials.code) return null;
 
         // Simple format validation for edge compatibility
@@ -34,6 +34,35 @@ export const authConfig: NextAuthConfig = {
           id: "edge-auth-placeholder",
           phone: phoneStr,
           email: "",
+        };
+      },
+    }),
+    // Email authentication provider
+    CredentialsProvider({
+      id: "email-login",
+      name: "Email",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        code: { label: "Verification Code", type: "text" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials.code) return null;
+
+        // Simple format validation for edge compatibility
+        // The actual verification against stored codes happens in auth.ts
+        const emailStr = String(credentials.email);
+        const codeStr = String(credentials.code);
+
+        // Validate email and code format
+        const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailStr);
+        const isValidCode = codeStr.length === 6 && /^\d{6}$/.test(codeStr);
+
+        if (!isValidEmail || !isValidCode) return null;
+
+        // The actual user lookup and creation happens in auth.ts
+        return {
+          id: "edge-auth-placeholder",
+          email: emailStr,
         };
       },
     }),

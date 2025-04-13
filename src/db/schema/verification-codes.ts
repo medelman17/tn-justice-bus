@@ -5,7 +5,8 @@ export const verificationCodes = pgTable("verification_codes", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => createId()),
-  phone: varchar("phone", { length: 15 }).notNull(),
+  phone: varchar("phone", { length: 15 }),
+  email: varchar("email", { length: 255 }),
   code: varchar("code", { length: 6 }).notNull(),
   expires: timestamp("expires").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
