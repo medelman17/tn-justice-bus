@@ -1,16 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// Paths that require authentication
-const protectedPaths = [
-  "/dashboard",
-  "/profile",
-  "/cases",
-  "/appointments",
-  "/documents",
-];
-
-// Paths that are always public
+// Public paths that don't require authentication
 const publicPaths = [
   "/",
   "/auth/signin",
@@ -18,6 +9,7 @@ const publicPaths = [
   "/auth/verify",
   "/auth/error",
   "/api/auth",
+  "/offline",
 ];
 
 export async function middleware(request: NextRequest) {
@@ -28,17 +20,14 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check if the path is protected
-  if (protectedPaths.some((path) => pathname.startsWith(path))) {
-    // Check for auth session cookie
-    const hasSession = checkForSessionCookie(request);
+  // Check for auth session cookie
+  const hasSession = checkForSessionCookie(request);
 
-    // Redirect to signin if not authenticated
-    if (!hasSession) {
-      const signInUrl = new URL("/auth/signin", request.url);
-      signInUrl.searchParams.set("callbackUrl", pathname);
-      return NextResponse.redirect(signInUrl);
-    }
+  // Redirect to signin if not authenticated
+  if (!hasSession) {
+    const signInUrl = new URL("/auth/signin", request.url);
+    signInUrl.searchParams.set("callbackUrl", pathname);
+    return NextResponse.redirect(signInUrl);
   }
 
   return NextResponse.next();
@@ -46,8 +35,11 @@ export async function middleware(request: NextRequest) {
 
 // Simple helper function to check for session cookie
 function checkForSessionCookie(req: NextRequest): boolean {
-  // Check for NextAuth.js session cookies
+  // Note: NextAuth.js v5 uses authjs cookie prefix
   return !!(
+    req.cookies.get("authjs.session-token")?.value ||
+    req.cookies.get("__Secure-authjs.session-token")?.value ||
+    // Fallback to check v4 cookies during transition
     req.cookies.get("next-auth.session-token")?.value ||
     req.cookies.get("__Secure-next-auth.session-token")?.value
   );

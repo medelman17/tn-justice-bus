@@ -1,16 +1,56 @@
 # Project Progress: Tennessee Justice Bus Pre-Visit Screening
 
-**Date:** April 12, 2025 (Updated - Next.js 15 Route Groups Implementation)
+**Date:** April 12, 2025 (Updated - NextAuth.js v5 Migration Completed)
 
 ## 1. Current Status: Foundation Phase
 
-The project has completed the initial setup, bootstrapping, database implementation, UI component installation, authentication system implementation, home page creation, user dashboard implementation, offline support, notification system implementation, and Next.js 15 Route Groups implementation phases (Week 1-3 of Phase 1). The Next.js application structure is in place with a fully defined database schema using Drizzle ORM, Shadcn UI components installed, a complete authentication system with email and phone-based sign-in flows, a responsive home page, and a user dashboard with profile and case management. We've successfully integrated the Software Planning Tool MCP server for enhanced project planning capabilities, implemented a comprehensive offline-first architecture including an SMS notification system with Knock, organized our code using Next.js 15 Route Groups, and are now planning the integration of Mastra for enhanced client intake forms.
+The project has completed the initial setup, bootstrapping, database implementation, UI component installation, authentication system implementation, home page creation, user dashboard implementation, offline support, notification system implementation, Next.js 15 Route Groups implementation, and NextAuth.js v5 migration phases (Week 1-3 of Phase 1). The Next.js application structure is in place with a fully defined database schema using Drizzle ORM, Shadcn UI components installed, a complete authentication system with email and phone-based sign-in flows, a responsive home page, and a user dashboard with profile and case management. We've successfully integrated the Software Planning Tool MCP server for enhanced project planning capabilities, implemented a comprehensive offline-first architecture including an SMS notification system with Knock, organized our code using Next.js 15 Route Groups, and successfully migrated to NextAuth.js v5 with edge compatibility.
 
-**Overall Progress**: 65%
+**Overall Progress**: 70%
 
 ## 2. Completed Work
 
 - All previous work documented in previous progress.md updates
+- **NextAuth.js v5 Migration Implementation**:
+  - Successfully migrated from NextAuth.js v4 to v5 beta
+  - Implemented a split configuration approach for edge compatibility:
+    - Created `auth.config.ts` with edge-compatible code for middleware
+    - Created `auth.ts` with full Supabase adapter integration
+  - Updated middleware to use direct cookie checking without edge-incompatible dependencies
+  - Added support for both old and new cookie formats during transition
+  - Fixed type issues with session and token handling for stricter typing
+  - Added environment variable fallbacks for both AUTH* and NEXTAUTH* prefixes
+  - Updated documentation with detailed migration summary
+  - Created comprehensive rollback plan in case of future issues
+  - Successfully tested all authentication flows after migration
+- **NextAuth.js v5 Migration Planning**:
+  - Analyzed new features and breaking changes in NextAuth.js v5
+  - Developed a comprehensive migration strategy focused on:
+    - Edge compatibility with a split configuration approach
+    - Universal `auth()` function for all authentication contexts
+    - Updated package dependencies and adapter imports
+    - Consistent environment variable management
+  - Created detailed implementation guide with:
+    - Step-by-step migration instructions
+    - Code examples for all required changes
+    - Testing strategies and troubleshooting tips
+    - Rollback plan for risk mitigation
+  - Added the migration plan to the docs directory as `nextauth-v5-migration-guide.md`
+  - Updated the documentation index in `docs/README.md`
+- **SMS Verification Enhancement Planning**:
+  - Analyzed current phone verification implementation
+  - Designed a production-ready verification code system that:
+    - Stores verification codes in the database with expiration
+    - Integrates with the existing Knock SMS notification service
+    - Implements proper security measures and rate limiting
+    - Maintains offline-first compatibility
+  - Created detailed implementation guide with:
+    - Database schema for verification codes
+    - API routes for code generation and verification
+    - Enhanced UI components for the verification flow
+    - Security considerations and testing strategies
+  - Added the enhancement plan to the docs directory as `sms-verification-enhancement-guide.md`
+  - Updated the documentation index in `docs/README.md`
 - **Next.js 15 Route Groups Implementation**:
   - Reorganized application routes using Next.js 15 Route Groups:
     - `(auth)` for authentication-related routes
@@ -88,11 +128,12 @@ The project has completed the initial setup, bootstrapping, database implementat
 - Continuing with the current phase (Phase 1: Foundation - Weeks 1-4)
 - Enhancing offline-ready data synchronization for rural environments
 - Implementing client intake form flows
-- Planning Phase 2 of Next.js 15 migration (Promise-based props)
+- Enhancing SMS verification system for production security
 
 ## 4. Next Steps & Upcoming Milestones (Phase 1: Foundation - Weeks 1-4)
 
 1. Continue with the current phase:
+   - Implement SMS verification enhancement with secure code storage
    - Enhance offline support capabilities with more advanced synchronization
    - Implement client intake forms with offline storage
    - Begin Phase 2 of Next.js 15 migration (Promise-based props)
@@ -112,6 +153,13 @@ The project has completed the initial setup, bootstrapping, database implementat
 ## 7. Decisions Log
 
 - All previous decisions documented in previous progress.md updates
+- **[2025-04-12]**: Implemented NextAuth.js v5 migration using a split configuration approach to maintain both edge compatibility and database adapter functionality.
+- **[2025-04-12]**: Added environment variable fallbacks for both AUTH* and NEXTAUTH* prefixes to support transition period.
+- **[2025-04-12]**: Updated middleware to use direct cookie checking to avoid edge-incompatible dependencies.
+- **[2025-04-12]**: Created detailed migration summary document for future reference and rollback guidance.
+- **[2025-04-12]**: Decision to create an implementation plan for migrating to NextAuth.js v5 with edge compatibility.
+- **[2025-04-12]**: Decision to design a production-ready enhancement for the SMS verification system that integrates with Knock and adds proper security measures.
+- **[2025-04-12]**: Decision to use a split configuration approach for NextAuth.js v5 to maintain both edge compatibility and database adapter functionality.
 - **[2025-04-12]**: Decision to integrate the Software Planning Tool MCP server for enhanced project planning capabilities.
 - **[2025-04-12]**: Decision to implement Knock SMS notification system with offline support instead of Twilio for SMS communication needs.
 - **[2025-04-12]**: Updated viewport configuration in Next.js application to follow Next.js 14+ best practices by moving themeColor to viewport export.
@@ -119,4 +167,4 @@ The project has completed the initial setup, bootstrapping, database implementat
 - **[2025-04-12]**: Updated .clinerules to explicitly allow research-oriented MCP tools in both PLAN and ACT modes.
 - **[2025-04-12]**: Implemented Next.js 15 Route Groups for improved code organization while maintaining the original URL structure.
 
-This document reflects the project progress after integrating Next.js 15 Route Groups to improve code organization while maintaining the original URL structure, setting the foundation for future routing enhancements.
+This document reflects the project progress after completing the NextAuth.js v5 migration, implementing all the necessary changes to ensure edge compatibility, and updating the memory bank to reflect this milestone.
