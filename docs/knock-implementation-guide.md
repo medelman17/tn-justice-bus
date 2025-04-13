@@ -518,7 +518,7 @@ Initialize the notification sync in `src/app/layout.tsx`:
 "use client";
 
 import { useEffect } from "react";
-import { setupNotificationSync } from "@/lib/offline-utils";
+import { setupNotificationSync } from "@/lib/offline/offline-utils";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   useEffect(() => {

@@ -109,8 +109,16 @@ The project is built primarily on the Vercel platform and Next.js framework. The
   - `/src/lib` - Utility functions and shared code:
     - `/src/lib/utils.ts` - General utilities including the `cn()` function for class merging
     - `/src/lib/db` - Database utilities and client
-    - `/src/lib/events-offline.ts` - Offline storage for events data
-    - `/src/lib/offline-utils.ts` - Utilities for offline functionality
+    - `/src/lib/offline` - Offline functionality:
+      - `/src/lib/offline/indexed-db.ts` - Core IndexedDB utilities
+      - `/src/lib/offline/offline-init.ts` - System initialization and migration
+      - `/src/lib/offline/offline-utils.ts` - General offline utilities
+      - `/src/lib/offline/offline-verification.ts` - Verification support
+      - `/src/lib/offline/events-offline.ts` - Events data management
+      - `/src/lib/offline/events-store.ts` - Events store operations
+      - `/src/lib/offline/offline-verification-db.ts` - Verification DB
+      - `/src/lib/offline/forms-offline.ts` - Form data management
+      - `/src/lib/offline/register-sw.ts` - Service worker registration
   - `/src/test` - Testing utilities and configuration:
     - `/src/test/setup.ts` - Global test setup and utilities
     - `/src/test/README.md` - Testing documentation
@@ -122,10 +130,23 @@ The project is built primarily on the Vercel platform and Next.js framework. The
   - `/tailwind.config.ts` - Tailwind configuration
   - `/components.json` - Shadcn UI configuration
 - **Configuration Files**:
-  - `next.config.ts` - Next.js configuration
-  - `tsconfig.json` - TypeScript configuration
+  - `next.config.ts` - Next.js configuration:
+    - Configures Serwist for service worker implementation
+    - Sets TypeScript `ignoreBuildErrors: true` to prevent test files from blocking builds
+    - Configures server external packages for Mastra framework
+  - `tsconfig.json` - TypeScript configuration:
+    - Standard Next.js TypeScript settings
+    - Excludes test files from production builds (`**/*.test.ts`, `**/*.test.tsx`)
+    - Excludes test utilities (`src/test/**/*`) from build process
+    - Excludes Vitest configuration (`vitest.config.ts`) to prevent type conflicts
+  - `eslint.config.mjs` - ESLint configuration:
+    - Extends Next.js core web vitals and TypeScript configurations
+    - Provides specific overrides for test files:
+      - Allows `any` types in test files
+      - Permits `var` declarations in test setup
+      - Disables strict assertions for testing purposes
+      - Targets test files via pattern matching
   - `postcss.config.mjs` - PostCSS configuration for Tailwind
-  - `eslint.config.mjs` - ESLint configuration
   - `package.json` - Project dependencies and scripts
   - `vitest.config.ts` - Vitest testing configuration
 - **Version Control**: Git with GitHub repository at https://github.com/medelman17/tn-justice-bus
@@ -167,7 +188,12 @@ The project is built primarily on the Vercel platform and Next.js framework. The
 ## 6. Technical Constraints & Considerations
 
 - **Offline First**: Application must function reliably with intermittent or no internet connectivity. This impacts:
-  - Data storage (IndexedDB)
+  - Data storage (IndexedDB):
+    - Structure: Multiple object stores for different data types
+    - Operations: CRUD functions with proper transaction handling
+    - Sync: Background synchronization with queue management
+    - Migration: Utilities for transitioning from localStorage
+    - Testing: Simplified approach focusing on core functionality
   - Asset caching
   - Token-based authentication persistence
   - Background synchronization logic

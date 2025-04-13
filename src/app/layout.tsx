@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Providers } from "@/components/providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,7 +15,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Tennessee Justice Bus Pre-Visit Screening",
-  description: "Pre-visit screening and preparation for Tennessee Justice Bus clients",
+  description:
+    "Pre-visit screening and preparation for Tennessee Justice Bus clients",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -37,9 +39,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {children}
-        </div>
+        <Providers>
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            {children}
+          </div>
+        </Providers>
       </body>
     </html>
   );

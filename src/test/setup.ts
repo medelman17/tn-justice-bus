@@ -1,5 +1,7 @@
 import { beforeAll, afterEach, afterAll, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
+import 'fake-indexeddb/auto';
+import { indexedDB } from 'fake-indexeddb';
 
 // Set up global variables needed for IndexedDB
 // Mock implementation for indexedDB if it doesn't exist
@@ -87,6 +89,20 @@ beforeAll(() => {
     const event = new Event(online ? 'online' : 'offline');
     window.dispatchEvent(event);
   };
+
+  // Mock fetch for all tests
+  global.fetch = vi.fn().mockImplementation(() => 
+    Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve({})
+    })
+  ) as any;
+
+  // Mock the navigator.onLine property
+  Object.defineProperty(navigator, 'onLine', { 
+    writable: true, 
+    value: true 
+  });
 });
 
 // Cleanup any global mocks after all tests

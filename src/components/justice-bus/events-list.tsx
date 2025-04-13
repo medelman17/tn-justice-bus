@@ -1,19 +1,28 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CalendarIcon, MapPinIcon, ClockIcon, UserIcon } from "lucide-react";
 import { JusticeBusEventsData } from "@/lib/validators/justice-bus-events";
-import { getEventsData, storeEventsData } from "@/lib/events-offline";
+import { getEventsData, storeEventsData } from "@/lib/offline/events-offline";
 
 /**
  * Component to display Justice Bus events in a card list.
  * Supports both online and offline mode.
  */
 export function JusticeBusEventsList() {
-  const [eventsData, setEventsData] = useState<JusticeBusEventsData | null>(null);
+  const [eventsData, setEventsData] = useState<JusticeBusEventsData | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
@@ -43,21 +52,21 @@ export function JusticeBusEventsList() {
         if (navigator.onLine) {
           // Online: Fetch from API
           const response = await fetch("/api/events");
-          
+
           if (!response.ok) {
             throw new Error(`Failed to fetch events: ${response.status}`);
           }
-          
-          const data = await response.json() as JusticeBusEventsData;
+
+          const data = (await response.json()) as JusticeBusEventsData;
           setEventsData(data);
-          
+
           // Store in IndexedDB for offline use
           await storeEventsData(data);
         } else {
           // Offline: Get from IndexedDB
           const offlineData = await getEventsData();
           setEventsData(offlineData);
-          
+
           if (!offlineData) {
             setError("No cached events data available offline");
           }
@@ -65,7 +74,7 @@ export function JusticeBusEventsList() {
       } catch (err) {
         console.error("Error fetching events:", err);
         setError(err instanceof Error ? err.message : "Failed to load events");
-        
+
         // Attempt to load from offline storage as fallback
         try {
           const offlineData = await getEventsData();
@@ -132,7 +141,9 @@ export function JusticeBusEventsList() {
   if (error && !eventsData) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[300px] gap-4">
-        <div className="text-xl font-semibold text-red-500">Failed to load events</div>
+        <div className="text-xl font-semibold text-red-500">
+          Failed to load events
+        </div>
         <div className="text-gray-500">{error}</div>
       </div>
     );
@@ -164,9 +175,12 @@ export function JusticeBusEventsList() {
               </svg>
             </div>
             <div>
-              <p className="font-bold">You are viewing events in offline mode</p>
+              <p className="font-bold">
+                You are viewing events in offline mode
+              </p>
               <p className="text-sm">
-                This information was cached on {new Date(eventsData.lastUpdated).toLocaleString()}
+                This information was cached on{" "}
+                {new Date(eventsData.lastUpdated).toLocaleString()}
               </p>
             </div>
           </div>
@@ -181,10 +195,13 @@ export function JusticeBusEventsList() {
       )}
 
       <h2 className="text-2xl font-bold mb-6">Upcoming Justice Bus Events</h2>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {eventsData.events.map((event) => (
-          <Card key={event.id} className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <Card
+            key={event.id}
+            className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+          >
             <CardHeader className="border-b pb-3">
               <CardTitle className="text-lg font-bold">{event.title}</CardTitle>
               <CardDescription className="flex items-center mt-1">
@@ -192,21 +209,26 @@ export function JusticeBusEventsList() {
                 {formatDate(event.date)}
               </CardDescription>
             </CardHeader>
-            
+
             <CardContent className="pt-4 pb-0">
               <div className="mb-3 flex items-start">
                 <MapPinIcon className="h-4 w-4 mr-2 mt-1 flex-shrink-0" />
                 <div>
                   <p className="font-medium">{event.location.name}</p>
-                  <p className="text-sm text-gray-500">{event.location.county} County</p>
+                  <p className="text-sm text-gray-500">
+                    {event.location.county} County
+                  </p>
                   {event.location.address && (
                     <p className="text-sm text-gray-500">
-                      {event.location.address.street}, {event.location.address.city}, {event.location.address.state} {event.location.address.zipCode}
+                      {event.location.address.street},{" "}
+                      {event.location.address.city},{" "}
+                      {event.location.address.state}{" "}
+                      {event.location.address.zipCode}
                     </p>
                   )}
                 </div>
               </div>
-              
+
               <div className="mb-3 flex items-center">
                 <ClockIcon className="h-4 w-4 mr-2 flex-shrink-0" />
                 <span>
@@ -220,11 +242,13 @@ export function JusticeBusEventsList() {
                   <span>{event.organizer}</span>
                 </div>
               )}
-              
+
               <div className="mb-3">
                 <div className="flex flex-wrap gap-2 mt-1">
-                  <Badge className={getStatusColor(event.status)}>{event.status}</Badge>
-                  
+                  <Badge className={getStatusColor(event.status)}>
+                    {event.status}
+                  </Badge>
+
                   {event.eventType.map((type) => (
                     <Badge key={type} variant="outline">
                       {type}
@@ -232,24 +256,22 @@ export function JusticeBusEventsList() {
                   ))}
                 </div>
               </div>
-              
+
               {event.description && (
                 <div className="mb-3">
-                  <p className="text-sm text-gray-600 line-clamp-3">{event.description}</p>
+                  <p className="text-sm text-gray-600 line-clamp-3">
+                    {event.description}
+                  </p>
                 </div>
               )}
             </CardContent>
-            
+
             <CardFooter className="flex justify-between border-t p-4 mt-2">
               <Button variant="outline" size="sm">
                 View Details
               </Button>
-              
-              {event.registrationUrl && (
-                <Button size="sm">
-                  Register
-                </Button>
-              )}
+
+              {event.registrationUrl && <Button size="sm">Register</Button>}
             </CardFooter>
           </Card>
         ))}

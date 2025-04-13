@@ -2,7 +2,7 @@
  * This file provides utility functions for handling Justice Bus events data in offline mode.
  * It leverages IndexedDB for local storage and background sync for data synchronization.
  */
-import { JusticeBusEventsData } from "./validators/justice-bus-events";
+import { JusticeBusEventsData } from "../validators/justice-bus-events";
 
 // IndexedDB database name and store
 const DB_NAME = "justice-bus-offline";

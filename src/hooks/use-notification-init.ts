@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { setupOfflineSync } from "@/lib/offline-utils";
+import { setupOfflineSync } from "@/lib/offline/offline-utils";
 
 /**
  * Hook to initialize notification system and set up offline sync

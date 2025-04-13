@@ -10,10 +10,20 @@ import { AlertTriangle, AlertCircle, WifiOff } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { isOnline } from "@/lib/offline-utils";
-import { storeOfflineVerificationAttempt, syncOfflineVerificationAttempts } from "@/lib/offline-verification";
+import { isOnline } from "@/lib/offline/offline-utils";
+import {
+  storeOfflineVerificationAttempt,
+  syncOfflineVerificationAttempts,
+} from "@/lib/offline/offline-verification";
 
 // Step 1: Enter phone number
 const phoneSchema = z.object({
@@ -28,7 +38,9 @@ const verificationSchema = z.object({
   code: z
     .string()
     .min(6, { message: "Verification code must be at least 6 digits" })
-    .regex(/^[0-9]+$/, { message: "Verification code must contain only numbers" }),
+    .regex(/^[0-9]+$/, {
+      message: "Verification code must contain only numbers",
+    }),
 });
 
 type PhoneFormValues = z.infer<typeof phoneSchema>;
@@ -51,13 +63,13 @@ export function PhoneSignInForm() {
     const handleOnline = () => {
       setIsOffline(false);
       // Try to process any pending verification attempts
-      syncOfflineVerificationAttempts().then(count => {
+      syncOfflineVerificationAttempts().then((count) => {
         if (count > 0) {
           console.log(`Processed ${count} offline verification attempts`);
         }
       });
     };
-    
+
     const handleOffline = () => {
       setIsOffline(true);
     };
@@ -109,7 +121,11 @@ export function PhoneSignInForm() {
       setPhoneNumber(values.phone);
       setStep("verification");
     } catch (error) {
-      setError(error instanceof Error ? error.message : "Failed to send verification code");
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Failed to send verification code"
+      );
       console.error("Phone verification error:", error);
     } finally {
       setIsSubmitting(false);
@@ -124,9 +140,11 @@ export function PhoneSignInForm() {
       if (isOffline) {
         // If offline, store the verification attempt for later
         await storeOfflineVerificationAttempt(phoneNumber, values.code);
-        
+
         // Show offline message but keep on verification page
-        setError("You&apos;re currently offline. Your verification will be processed when you&apos;re back online.");
+        setError(
+          "You&apos;re currently offline. Your verification will be processed when you&apos;re back online."
+        );
         setIsSubmitting(false);
       } else {
         // If online, process normally
@@ -156,19 +174,23 @@ export function PhoneSignInForm() {
     <>
       {step === "phone" ? (
         <Form {...phoneForm}>
-          <form onSubmit={phoneForm.handleSubmit(onSubmitPhone)} className="space-y-4">
+          <form
+            onSubmit={phoneForm.handleSubmit(onSubmitPhone)}
+            className="space-y-4"
+          >
             {error && (
               <Alert variant={isOffline ? "warning" : "destructive"}>
                 {isOffline ? <WifiOff /> : <AlertCircle />}
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-            
+
             {isOffline && !error && (
               <Alert variant="warning" className="mb-4">
                 <WifiOff />
                 <AlertDescription>
-                  You are currently offline. Verification code request will be queued for when you&apos;re back online.
+                  You are currently offline. Verification code request will be
+                  queued for when you&apos;re back online.
                 </AlertDescription>
               </Alert>
             )}
@@ -209,18 +231,20 @@ export function PhoneSignInForm() {
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-            
+
             {isOffline && !error && (
               <Alert variant="warning" className="mb-4">
                 <WifiOff />
                 <AlertDescription>
-                  You are currently offline. Your verification attempt will be processed when you&apos;re back online.
+                  You are currently offline. Your verification attempt will be
+                  processed when you&apos;re back online.
                 </AlertDescription>
               </Alert>
             )}
 
             <div className="text-sm text-muted-foreground mb-4">
-              We sent a verification code to <strong>{phoneNumber}</strong>. The code will expire in 10 minutes.
+              We sent a verification code to <strong>{phoneNumber}</strong>. The
+              code will expire in 10 minutes.
               <div className="mt-2 flex gap-4">
                 <Button
                   variant="link"
@@ -237,20 +261,27 @@ export function PhoneSignInForm() {
                   onClick={async () => {
                     setError(null);
                     try {
-                      const response = await fetch("/api/auth/send-verification", {
-                        method: "POST",
-                        headers: {
-                          "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({ phone: phoneNumber }),
-                      });
-                      
+                      const response = await fetch(
+                        "/api/auth/send-verification",
+                        {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({ phone: phoneNumber }),
+                        }
+                      );
+
                       if (!response.ok) {
                         const data = await response.json();
                         throw new Error(data.error || "Failed to resend code");
                       }
                     } catch (error) {
-                      setError(error instanceof Error ? error.message : "Failed to resend code");
+                      setError(
+                        error instanceof Error
+                          ? error.message
+                          : "Failed to resend code"
+                      );
                     }
                   }}
                 >
@@ -266,11 +297,7 @@ export function PhoneSignInForm() {
                 <FormItem>
                   <FormLabel>Verification Code</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="123456"
-                      maxLength={6}
-                      {...field}
-                    />
+                    <Input placeholder="123456" maxLength={6} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
