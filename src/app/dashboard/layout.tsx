@@ -5,6 +5,7 @@ import { useSession, SessionProvider } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { useNotificationInit } from "@/hooks/use-notification-init";
 import { 
   LayoutDashboard, 
   UserRound, 
@@ -15,7 +16,8 @@ import {
   LogOut, 
   Menu, 
   X, 
-  ChevronRight 
+  ChevronRight,
+  Bell 
 } from "lucide-react";
 
 interface DashboardLayoutProps {
@@ -28,6 +30,9 @@ function DashboardContent({ children }: DashboardLayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const router = useRouter();
+
+  // Initialize notification system
+  useNotificationInit();
 
   // Check if user is authenticated
   if (status === "loading") {
@@ -49,6 +54,7 @@ function DashboardContent({ children }: DashboardLayoutProps) {
     { icon: <Briefcase size={20} />, label: "Cases", href: "/dashboard/cases" },
     { icon: <Calendar size={20} />, label: "Appointments", href: "/dashboard/appointments" },
     { icon: <FileText size={20} />, label: "Documents", href: "/dashboard/documents" },
+    { icon: <Bell size={20} />, label: "Notifications", href: "/dashboard/notifications-test" },
     { icon: <Settings size={20} />, label: "Settings", href: "/dashboard/settings" },
   ];
 

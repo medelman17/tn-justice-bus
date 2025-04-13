@@ -1,3 +1,7 @@
+"use client";
+
+import Link from "next/link";
+
 export default function OfflinePage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4 text-center">
@@ -17,12 +21,13 @@ export default function OfflinePage() {
         </ul>
       </div>
       
-      <button 
-        onClick={() => window.location.href = "/dashboard"} 
-        className="rounded-md bg-primary px-4 py-2 text-white hover:bg-primary/90"
-      >
-        Go to Dashboard
-      </button>
+      <Link href="/dashboard">
+        <button 
+          className="rounded-md bg-primary px-4 py-2 text-white hover:bg-primary/90"
+        >
+          Go to Dashboard
+        </button>
+      </Link>
     </div>
   );
 }

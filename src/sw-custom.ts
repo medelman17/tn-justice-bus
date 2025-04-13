@@ -1,9 +1,16 @@
 /// <reference lib="webworker" />
 
+// This is necessary for Serwist to work correctly
 import { defaultCache } from "@serwist/next/worker";
 
 // Define the service worker global scope type
-declare const self: ServiceWorkerGlobalScope;
+declare const self: ServiceWorkerGlobalScope & {
+  __SW_MANIFEST: Array<string>;
+};
+
+// Reference SW_MANIFEST to avoid build error
+// This is needed for serwist to correctly generate the manifest
+const manifest = self.__SW_MANIFEST || [];
 
 // Custom cache name
 const CACHE_NAME = "justice-bus-cache-v1";
@@ -25,6 +32,9 @@ self.addEventListener("install", (event) => {
       return cache.addAll(PRECACHE_ASSETS);
     })
   );
+
+  // Skip waiting to activate the service worker immediately
+  self.skipWaiting();
 });
 
 // Activate event - clean up old caches
@@ -34,7 +44,7 @@ self.addEventListener("activate", (event) => {
       return Promise.all(
         cacheNames
           .filter((cacheName) => {
-            return cacheName !== CACHE_NAME;
+            return cacheName !== CACHE_NAME && !cacheName.startsWith("serwist");
           })
           .map((cacheName) => {
             return caches.delete(cacheName);
@@ -42,6 +52,9 @@ self.addEventListener("activate", (event) => {
       );
     })
   );
+
+  // Claim clients to take control immediately
+  self.clients.claim();
 });
 
 // Fetch event - respond with cached content when possible

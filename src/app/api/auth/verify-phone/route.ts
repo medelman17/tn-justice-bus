@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-
-// We'll need to integrate Knock for SMS here in a real implementation
-// This is a placeholder implementation for now
+import { getKnockClient, WORKFLOWS, KnockRecipient } from "@/lib/knock";
+import { db } from "@/lib/db";
+// We'll check for verification code schema in the schema - for now using a placeholder structure
+// In a production app, this would be defined in the schema
+// import { verificationCodes } from "@/db/schema";
+import { randomUUID } from "crypto";
 
 const phoneSchema = z.object({
   phone: z
@@ -11,25 +14,70 @@ const phoneSchema = z.object({
     .regex(/^\+?[0-9]+$/, { message: "Please enter a valid phone number" }),
 });
 
+// Mock verification codes storage
+// In a production app, this would be stored in the database
+const mockVerificationStorage = new Map();
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { phone } = phoneSchema.parse(body);
 
-    // In a real implementation, we would:
-    // 1. Generate a 6-digit code
-    // 2. Store the code with the phone number (Redis, database, etc.)
-    // 3. Send the code via Knock
-
-    // For now, simulate success
-    // console.log(`Would send verification code to ${phone}`);
-
-    // Generate a random 6-digit code (in production this would be stored)
+    // Generate a 6-digit verification code
     const code = Math.floor(100000 + Math.random() * 900000).toString();
-    console.log(`Verification code for ${phone}: ${code}`);
 
-    // Simulate a delay like a real SMS API
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    // Create expiration time (10 minutes from now)
+    const expiresAt = new Date();
+    expiresAt.setMinutes(expiresAt.getMinutes() + 10);
+
+    const verificationId = randomUUID();
+
+    // Store in mock storage (in production, this would be in the database)
+    mockVerificationStorage.set(phone, {
+      id: verificationId,
+      code,
+      expiresAt,
+      createdAt: new Date(),
+    });
+
+    // In a production app, we would store in the database:
+    /*
+    await db.insert(verificationCodes).values({
+      id: verificationId,
+      phone,
+      code,
+      expiresAt,
+      createdAt: new Date(),
+    });
+    */
+
+    // Get Knock client
+    const knock = getKnockClient();
+
+    try {
+      // Prepare recipient - using the phone number as the ID for new users
+      const recipient: KnockRecipient = {
+        id: phone,
+        phone_number: phone,
+      };
+
+      // Send verification code via Knock
+      await knock.workflows.trigger(WORKFLOWS.VERIFICATION_CODE, {
+        recipients: [recipient],
+        data: {
+          code,
+          expires_in: "10 minutes",
+          app_name: "Tennessee Justice Bus",
+        },
+      });
+
+      console.log(`Verification code sent to ${phone}`);
+    } catch (knockError) {
+      console.error("Error sending verification code via Knock:", knockError);
+      throw new Error(
+        `Failed to send code: ${knockError instanceof Error ? knockError.message : "Unknown error"}`
+      );
+    }
 
     return NextResponse.json({
       success: true,
@@ -45,8 +93,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    console.error("Error details:", error);
+
     return NextResponse.json(
-      { success: false, message: "Failed to send verification code" },
+      {
+        success: false,
+        message: "Failed to send verification code",
+        error: error instanceof Error ? error.message : "Unknown error",
+      },
       { status: 500 }
     );
   }

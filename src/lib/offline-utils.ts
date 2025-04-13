@@ -1,13 +1,21 @@
 // Utilities for offline support
+import { NotificationPayload, NotificationOptions } from "@/lib/knock";
 
 // Type definitions
 interface FormData {
   [key: string]: unknown;
 }
 
-interface QueueItem {
+interface FormQueueItem {
   url: string;
   data: FormData;
+  timestamp: string;
+}
+
+interface NotificationQueueItem {
+  workflowKey: string;
+  payload: NotificationPayload;
+  options: NotificationOptions;
   timestamp: string;
 }
 
@@ -135,56 +143,159 @@ async function storeFormDataLocally(
 }
 
 /**
- * Process offline form queue when coming back online
+ * Store a notification for later delivery when back online
+ * @param workflowKey The workflow key
+ * @param payload The notification payload
+ * @param options The notification options
+ */
+export async function queueNotification(
+  workflowKey: string,
+  payload: NotificationPayload,
+  options: NotificationOptions = {}
+): Promise<void> {
+  try {
+    // Create queue data
+    const queueData: NotificationQueueItem = {
+      workflowKey,
+      payload,
+      options,
+      timestamp: new Date().toISOString(),
+    };
+
+    // Get existing queue or create new one
+    const queueString = localStorage.getItem("notification_queue") || "[]";
+    const queue = JSON.parse(queueString);
+
+    // Add new item to queue
+    queue.push(queueData);
+
+    // Store updated queue
+    localStorage.setItem("notification_queue", JSON.stringify(queue));
+
+    console.log(`Notification queued for later delivery: ${workflowKey}`);
+  } catch (error) {
+    console.error("Error queueing notification:", error);
+  }
+}
+
+/**
+ * Process offline form and notification queues when coming back online
  */
 export function setupOfflineSync(): void {
   window.addEventListener("online", async () => {
     console.log("Back online, checking for pending form submissions...");
 
+    // Process form submissions
     try {
-      const queueString = localStorage.getItem("offline_form_queue") || "[]";
-      const queue = JSON.parse(queueString);
+      const formQueueString =
+        localStorage.getItem("offline_form_queue") || "[]";
+      const formQueue = JSON.parse(formQueueString);
 
-      if (queue.length === 0) {
-        console.log("No pending submissions found");
-        return;
-      }
-
-      console.log(`Found ${queue.length} pending submissions to process`);
-
-      // Process queue
-      const newQueue = [];
-      for (const item of queue) {
-        try {
-          // Attempt to submit
-          await fetch(item.url, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(item.data),
-          });
-
-          console.log(`Successfully submitted form to ${item.url}`);
-        } catch (error) {
-          console.error(`Failed to submit form to ${item.url}:`, error);
-          // Keep failed submissions in the queue for next attempt
-          newQueue.push(item);
-        }
-      }
-
-      // Update queue with only failed submissions
-      localStorage.setItem("offline_form_queue", JSON.stringify(newQueue));
-
-      if (newQueue.length === 0) {
-        console.log("All pending submissions processed successfully");
-      } else {
+      if (formQueue.length > 0) {
         console.log(
-          `${newQueue.length} submissions failed and will be retried later`
+          `Found ${formQueue.length} pending form submissions to process`
         );
+
+        // Process form queue
+        const newFormQueue: FormQueueItem[] = [];
+        for (const item of formQueue) {
+          try {
+            // Attempt to submit
+            await fetch(item.url, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(item.data),
+            });
+
+            console.log(`Successfully submitted form to ${item.url}`);
+          } catch (error) {
+            console.error(`Failed to submit form to ${item.url}:`, error);
+            // Keep failed submissions in the queue for next attempt
+            newFormQueue.push(item);
+          }
+        }
+
+        // Update form queue with only failed submissions
+        localStorage.setItem(
+          "offline_form_queue",
+          JSON.stringify(newFormQueue)
+        );
+
+        if (newFormQueue.length === 0) {
+          console.log("All pending form submissions processed successfully");
+        } else {
+          console.log(
+            `${newFormQueue.length} form submissions failed and will be retried later`
+          );
+        }
+      } else {
+        console.log("No pending form submissions found");
       }
     } catch (error) {
       console.error("Error processing offline form queue:", error);
+    }
+
+    // Process notifications
+    try {
+      const notifQueueString =
+        localStorage.getItem("notification_queue") || "[]";
+      const notifQueue = JSON.parse(notifQueueString);
+
+      if (notifQueue.length > 0) {
+        console.log(
+          `Found ${notifQueue.length} pending notifications to process`
+        );
+
+        // Process notification queue
+        const newNotifQueue: NotificationQueueItem[] = [];
+        for (const item of notifQueue) {
+          try {
+            // Attempt to submit via API route
+            await fetch("/api/notifications/process-queued", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                workflowKey: item.workflowKey,
+                payload: item.payload,
+                options: item.options,
+              }),
+            });
+
+            console.log(
+              `Successfully processed notification: ${item.workflowKey}`
+            );
+          } catch (error) {
+            console.error(
+              `Failed to process notification ${item.workflowKey}:`,
+              error
+            );
+            // Keep failed notifications in the queue for next attempt
+            newNotifQueue.push(item);
+          }
+        }
+
+        // Update notification queue with only failed ones
+        localStorage.setItem(
+          "notification_queue",
+          JSON.stringify(newNotifQueue)
+        );
+
+        if (newNotifQueue.length === 0) {
+          console.log("All pending notifications processed successfully");
+        } else {
+          console.log(
+            `${newNotifQueue.length} notifications failed and will be retried later`
+          );
+        }
+      } else {
+        console.log("No pending notifications found");
+      }
+    } catch (error) {
+      console.error("Error processing notification queue:", error);
     }
   });
 }
