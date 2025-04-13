@@ -103,19 +103,19 @@ export function EmailSignInForm() {
   }
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div className="w-full">
       {/* Error message */}
       {error && (
-        <Alert variant="destructive" className="mb-4">
-          <AlertTitle>Error</AlertTitle>
+        <Alert variant="destructive" className="mb-6">
+          <AlertTitle className="font-medium">Error</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
 
       {/* Success message */}
       {success && (
-        <Alert variant="default" className="mb-4 bg-green-50 border-green-500">
-          <AlertTitle>Success</AlertTitle>
+        <Alert variant="default" className="mb-6 bg-green-50 border-green-500">
+          <AlertTitle className="font-medium">Success</AlertTitle>
           <AlertDescription>{success}</AlertDescription>
         </Alert>
       )}
@@ -123,28 +123,33 @@ export function EmailSignInForm() {
       <Form {...emailForm}>
         <form
           onSubmit={emailForm.handleSubmit(onEmailSubmit)}
-          className="space-y-4"
+          className="space-y-6"
         >
           <FormField
             control={emailForm.control}
             name="email"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
+              <FormItem className="space-y-2">
+                <FormLabel className="font-medium">Email</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="name@example.com"
                     autoComplete="email"
                     disabled={isLoading}
+                    className="h-11"
                     {...field}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-xs" />
               </FormItem>
             )}
           />
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button
+            type="submit"
+            className="w-full h-11 font-medium"
+            disabled={isLoading}
+          >
             {isLoading ? "Sending..." : "Send Verification Code"}
           </Button>
         </form>

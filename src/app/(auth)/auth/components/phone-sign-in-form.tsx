@@ -6,7 +6,13 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { AlertTriangle, AlertCircle, WifiOff } from "lucide-react";
+import Link from "next/link";
+import {
+  AlertTriangle,
+  AlertCircle,
+  WifiOff,
+  LoaderCircle,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -171,23 +177,30 @@ export function PhoneSignInForm() {
   }
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div className="w-full">
       {step === "phone" ? (
         <Form {...phoneForm}>
           <form
             onSubmit={phoneForm.handleSubmit(onSubmitPhone)}
-            className="space-y-4"
+            className="space-y-6"
           >
             {error && (
-              <Alert variant={isOffline ? "warning" : "destructive"}>
-                {isOffline ? <WifiOff /> : <AlertCircle />}
+              <Alert
+                variant={isOffline ? "warning" : "destructive"}
+                className="mb-6"
+              >
+                {isOffline ? (
+                  <WifiOff className="h-4 w-4" />
+                ) : (
+                  <AlertCircle className="h-4 w-4" />
+                )}
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
 
             {isOffline && !error && (
-              <Alert variant="warning" className="mb-4">
-                <WifiOff />
+              <Alert variant="warning" className="mb-6">
+                <WifiOff className="h-4 w-4" />
                 <AlertDescription>
                   You are currently offline. Verification code request will be
                   queued for when you&apos;re back online.
@@ -199,23 +212,36 @@ export function PhoneSignInForm() {
               control={phoneForm.control}
               name="phone"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
+                <FormItem className="space-y-2">
+                  <FormLabel className="font-medium">Phone Number</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="(555) 123-4567"
-                      type="tel"
-                      autoComplete="tel"
                       {...field}
+                      type="tel"
+                      placeholder="(555) 123-4567"
+                      autoComplete="tel"
+                      disabled={isSubmitting || isOffline}
+                      className="h-11"
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
 
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? "Sending code..." : "Send Verification Code"}
+            <Button
+              type="submit"
+              disabled={isSubmitting || isOffline}
+              className="w-full h-11 font-medium"
+            >
+              {isSubmitting ? (
+                <>
+                  <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                "Send Verification Code"
+              )}
             </Button>
           </form>
         </Form>
@@ -223,89 +249,75 @@ export function PhoneSignInForm() {
         <Form {...verificationForm}>
           <form
             onSubmit={verificationForm.handleSubmit(onSubmitVerification)}
-            className="space-y-4"
+            className="space-y-6"
           >
             {error && (
-              <Alert variant={isOffline ? "warning" : "destructive"}>
-                {isOffline ? <WifiOff /> : <AlertCircle />}
+              <Alert
+                variant={isOffline ? "warning" : "destructive"}
+                className="mb-6"
+              >
+                {isOffline ? (
+                  <WifiOff className="h-4 w-4" />
+                ) : (
+                  <AlertCircle className="h-4 w-4" />
+                )}
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
 
-            {isOffline && !error && (
-              <Alert variant="warning" className="mb-4">
-                <WifiOff />
-                <AlertDescription>
-                  You are currently offline. Your verification attempt will be
-                  processed when you&apos;re back online.
-                </AlertDescription>
-              </Alert>
-            )}
-
-            <div className="text-sm text-muted-foreground mb-4">
-              We sent a verification code to <strong>{phoneNumber}</strong>. The
-              code will expire in 10 minutes.
-              <div className="mt-2 flex gap-4">
-                <Button
-                  variant="link"
-                  type="button"
-                  className="p-0 h-auto font-normal"
-                  onClick={() => setStep("phone")}
-                >
-                  Change phone number
-                </Button>
-                <Button
-                  variant="link"
-                  type="button"
-                  className="p-0 h-auto font-normal"
-                  onClick={async () => {
-                    setError(null);
-                    try {
-                      const response = await fetch(
-                        "/api/auth/send-verification",
-                        {
-                          method: "POST",
-                          headers: {
-                            "Content-Type": "application/json",
-                          },
-                          body: JSON.stringify({ phone: phoneNumber }),
-                        }
-                      );
-
-                      if (!response.ok) {
-                        const data = await response.json();
-                        throw new Error(data.error || "Failed to resend code");
-                      }
-                    } catch (error) {
-                      setError(
-                        error instanceof Error
-                          ? error.message
-                          : "Failed to resend code"
-                      );
-                    }
-                  }}
-                >
-                  Resend code
-                </Button>
-              </div>
+            <div className="space-y-2 mb-2">
+              <p className="text-sm font-medium">
+                Enter the verification code sent to {phoneNumber}
+              </p>
+              <Link
+                href="#"
+                onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
+                  e.preventDefault();
+                  setStep("phone");
+                }}
+                className="text-xs text-primary hover:underline"
+              >
+                Change phone number
+              </Link>
             </div>
 
             <FormField
               control={verificationForm.control}
               name="code"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Verification Code</FormLabel>
+                <FormItem className="space-y-2">
+                  <FormLabel className="font-medium">
+                    Verification Code
+                  </FormLabel>
                   <FormControl>
-                    <Input placeholder="123456" maxLength={6} {...field} />
+                    <Input
+                      {...field}
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      placeholder="123456"
+                      className="h-11"
+                      disabled={isSubmitting}
+                    />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
 
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? "Verifying..." : "Verify & Sign In"}
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full h-11 font-medium"
+            >
+              {isSubmitting ? (
+                <>
+                  <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                  Verifying...
+                </>
+              ) : (
+                "Verify Code"
+              )}
             </Button>
           </form>
         </Form>
