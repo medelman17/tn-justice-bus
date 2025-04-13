@@ -27,40 +27,40 @@
 
 ### Database Setup
 
-- [ ] Initialize IndexedDB schema
-  - [ ] Forms store
+- [x] Initialize IndexedDB schema (using localStorage alternative)
+  - [x] Forms store (implemented in offline-utils.ts using localStorage)
   - [ ] Events store
-  - [ ] Notifications store
-  - [ ] Auth store
+  - [x] Notifications store (implemented in offline-utils.ts)
+  - [x] Auth store (implemented for tokens and verification)
   - [ ] Mastra workflows store
   - [ ] Legal knowledge store
 
 ### Service Worker
 
-- [ ] Configure Serwist in `next.config.ts`
-- [ ] Implement custom service worker
-  - [ ] Cache strategies for static assets
-  - [ ] API request handling
-  - [ ] Offline fallback pages
-  - [ ] Background sync registration
+- [x] Configure Serwist in `next.config.ts`
+- [x] Implement custom service worker
+  - [x] Cache strategies for static assets
+  - [x] API request handling
+  - [x] Offline fallback pages
+  - [x] Background sync registration
 
 ### Offline Storage Implementation
 
-- [ ] Implement unified storage strategy
-  - [ ] Create `offline-storage.ts`
-  - [ ] Set up database schema
-  - [ ] Implement CRUD operations
+- [x] Implement unified storage strategy
+  - [x] Create `offline-storage.ts` (implemented as offline-utils.ts)
+  - [x] Set up database schema (using localStorage)
+  - [x] Implement CRUD operations
   - [ ] Add indexing for efficient queries
 
 ### Sync Management
 
-- [ ] Implement sync manager
-  - [ ] Form data synchronization
+- [x] Implement sync manager
+  - [x] Form data synchronization
   - [ ] Event data synchronization
-  - [ ] Notification synchronization
+  - [x] Notification synchronization
   - [ ] Mastra workflow synchronization
   - [ ] Legal knowledge synchronization
-- [ ] Add retry logic and error handling
+- [x] Add retry logic and error handling
 - [ ] Implement conflict resolution
 
 ## Mastra AI Integration
@@ -96,11 +96,11 @@
 
 ### NextAuth Setup
 
-- [ ] Configure edge-compatible auth
-- [ ] Set up authentication providers
-- [ ] Implement phone verification
+- [x] Configure edge-compatible auth
+- [x] Set up authentication providers
+- [x] Implement phone verification (with offline support)
 - [ ] Add protected routes
-- [ ] Configure offline token persistence
+- [x] Configure offline token persistence
 
 ### User Management
 
