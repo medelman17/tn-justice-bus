@@ -4,22 +4,47 @@ import { db } from "@/lib/db";
 import { users } from "@/db/schema";
 
 // Registration validation schema
-const registerSchema = z.object({
+const baseRegisterSchema = z.object({
   firstName: z.string().min(1, { message: "First name is required" }),
   lastName: z.string().min(1, { message: "Last name is required" }),
-  email: z
-    .string()
-    .email({ message: "Please enter a valid email address" })
-    .optional()
-    .nullable(),
-  phone: z
-    .string()
-    .min(10, { message: "Phone number must be at least 10 digits" })
-    .regex(/^\+?[0-9]+$/, { message: "Please enter a valid phone number" })
-    .optional()
-    .nullable(),
+  email: z.string().optional().nullable(),
+  phone: z.string().optional().nullable(),
   preferredContactMethod: z.enum(["email", "phone", "sms"]),
 });
+
+// Updated schema with conditional validation
+const registerSchema = baseRegisterSchema
+  .refine(
+    (data) => {
+      if (data.preferredContactMethod === "email") {
+        return !!data.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email);
+      }
+      return true;
+    },
+    {
+      message: "Please enter a valid email address",
+      path: ["email"],
+    }
+  )
+  .refine(
+    (data) => {
+      if (
+        data.preferredContactMethod === "phone" ||
+        data.preferredContactMethod === "sms"
+      ) {
+        return (
+          !!data.phone &&
+          data.phone.length >= 10 &&
+          /^\+?[0-9]+$/.test(data.phone)
+        );
+      }
+      return true;
+    },
+    {
+      message: "Please enter a valid phone number (at least 10 digits)",
+      path: ["phone"],
+    }
+  );
 
 export async function POST(req: NextRequest) {
   try {

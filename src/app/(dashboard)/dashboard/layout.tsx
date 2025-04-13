@@ -6,18 +6,18 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useNotificationInit } from "@/hooks/use-notification-init";
-import { 
-  LayoutDashboard, 
-  UserRound, 
-  Briefcase, 
-  Calendar, 
-  FileText, 
-  Settings, 
-  LogOut, 
-  Menu, 
-  X, 
+import {
+  LayoutDashboard,
+  UserRound,
+  Briefcase,
+  Calendar,
+  FileText,
+  Settings,
+  LogOut,
+  Menu,
+  X,
   ChevronRight,
-  Bell 
+  Bell,
 } from "lucide-react";
 
 interface DashboardLayoutProps {
@@ -34,7 +34,29 @@ function DashboardContent({ children }: DashboardLayoutProps) {
   // Initialize notification system
   useNotificationInit();
 
-  // Check if user is authenticated
+  // Handle logout with a callback instead of inline router.push
+  const handleLogout = React.useCallback(() => {
+    router.push("/auth/signout");
+  }, [router]);
+
+  // Use useEffect for navigation - all hooks must be called before any conditional returns
+  React.useEffect(() => {
+    let timeout: NodeJS.Timeout | undefined;
+
+    if (status === "unauthenticated") {
+      // Use a ref to track if the component is still mounted
+      timeout = setTimeout(() => {
+        router.push("/auth/signin");
+      }, 100);
+    }
+
+    // Cleanup function to prevent state updates after unmount
+    return () => {
+      if (timeout) clearTimeout(timeout);
+    };
+  }, [status, router]);
+
+  // Render loading state
   if (status === "loading") {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -43,23 +65,66 @@ function DashboardContent({ children }: DashboardLayoutProps) {
     );
   }
 
+  // Render redirecting state
   if (status === "unauthenticated") {
-    router.push("/auth/signin");
-    return null;
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-xl font-semibold">Redirecting to sign in...</h1>
+          <div className="mt-4 h-8 w-8 mx-auto animate-spin rounded-full border-b-2 border-primary"></div>
+        </div>
+      </div>
+    );
   }
 
   const navItems = [
-    { icon: <LayoutDashboard size={20} />, label: "Dashboard", href: "/dashboard" },
-    { icon: <UserRound size={20} />, label: "Profile", href: "/dashboard/profile" },
+    {
+      icon: <LayoutDashboard size={20} />,
+      label: "Dashboard",
+      href: "/dashboard",
+    },
+    {
+      icon: <UserRound size={20} />,
+      label: "Profile",
+      href: "/dashboard/profile",
+    },
     { icon: <Briefcase size={20} />, label: "Cases", href: "/dashboard/cases" },
-    { icon: <FileText size={20} />, label: "Legal Intake", href: "/dashboard/intake" },
-    { icon: <Calendar size={20} />, label: "Events", href: "/dashboard/events" },
-    { icon: <Calendar size={20} />, label: "Appointments", href: "/dashboard/appointments" },
-    { icon: <FileText size={20} />, label: "Documents", href: "/dashboard/documents" },
-    { icon: <Bell size={20} />, label: "Notifications", href: "/dashboard/notifications-test" },
-    { icon: <Settings size={20} />, label: "Settings", href: "/dashboard/settings" },
+    {
+      icon: <FileText size={20} />,
+      label: "Legal Intake",
+      href: "/dashboard/intake",
+    },
+    {
+      icon: <Calendar size={20} />,
+      label: "Events",
+      href: "/dashboard/events",
+    },
+    {
+      icon: <Calendar size={20} />,
+      label: "Appointments",
+      href: "/dashboard/appointments",
+    },
+    {
+      icon: <FileText size={20} />,
+      label: "Documents",
+      href: "/dashboard/documents",
+    },
+    {
+      icon: <Bell size={20} />,
+      label: "Notifications",
+      href: "/dashboard/notifications-test",
+    },
+    {
+      icon: <Settings size={20} />,
+      label: "Settings",
+      href: "/dashboard/settings",
+    },
     // Admin section
-    { icon: <UserRound size={20} />, label: "User Management", href: "/dashboard/admin/users" },
+    {
+      icon: <UserRound size={20} />,
+      label: "User Management",
+      href: "/dashboard/admin/users",
+    },
   ];
 
   return (
@@ -75,21 +140,28 @@ function DashboardContent({ children }: DashboardLayoutProps) {
             <div className="flex h-16 items-center justify-between px-4">
               {isSidebarOpen ? (
                 <Link href="/dashboard" className="flex items-center">
-                  <h1 className="text-xl font-bold text-primary">Justice Bus</h1>
+                  <h1 className="text-xl font-bold text-primary">
+                    Justice Bus
+                  </h1>
                 </Link>
               ) : (
-                <Link href="/dashboard" className="flex items-center justify-center">
+                <Link
+                  href="/dashboard"
+                  className="flex items-center justify-center"
+                >
                   <span className="text-2xl font-bold text-primary">JB</span>
                 </Link>
               )}
               <button
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
                 className="rounded-md p-1 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                aria-label={isSidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+                aria-label={
+                  isSidebarOpen ? "Collapse sidebar" : "Expand sidebar"
+                }
               >
-                <ChevronRight 
-                  size={20} 
-                  className={`transform transition-transform duration-300 ${isSidebarOpen ? "" : "rotate-180"}`} 
+                <ChevronRight
+                  size={20}
+                  className={`transform transition-transform duration-300 ${isSidebarOpen ? "" : "rotate-180"}`}
                 />
               </button>
             </div>
@@ -132,10 +204,10 @@ function DashboardContent({ children }: DashboardLayoutProps) {
               {isSidebarOpen && (
                 <div className="ml-3">
                   <p className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                    {session?.user?.name || 'User'}
+                    {session?.user?.name || "User"}
                   </p>
                   <button
-                    onClick={() => router.push('/api/auth/signout')}
+                    onClick={handleLogout}
                     className="flex items-center text-xs text-gray-500 hover:text-primary dark:text-gray-400"
                   >
                     <LogOut size={14} className="mr-1" />
@@ -159,7 +231,10 @@ function DashboardContent({ children }: DashboardLayoutProps) {
         </button>
 
         {isMobileSidebarOpen && (
-          <div className="fixed inset-0 z-10 bg-black bg-opacity-50" onClick={() => setIsMobileSidebarOpen(false)} />
+          <div
+            className="fixed inset-0 z-10 bg-black bg-opacity-50"
+            onClick={() => setIsMobileSidebarOpen(false)}
+          />
         )}
 
         <div
@@ -171,7 +246,9 @@ function DashboardContent({ children }: DashboardLayoutProps) {
             <div>
               <div className="flex h-16 items-center justify-between px-4">
                 <Link href="/dashboard" className="flex items-center">
-                  <h1 className="text-xl font-bold text-primary">Justice Bus</h1>
+                  <h1 className="text-xl font-bold text-primary">
+                    Justice Bus
+                  </h1>
                 </Link>
                 <button
                   onClick={() => setIsMobileSidebarOpen(false)}
@@ -220,10 +297,10 @@ function DashboardContent({ children }: DashboardLayoutProps) {
                 </div>
                 <div className="ml-3">
                   <p className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                    {session?.user?.name || 'User'}
+                    {session?.user?.name || "User"}
                   </p>
                   <button
-                    onClick={() => router.push('/api/auth/signout')}
+                    onClick={handleLogout}
                     className="flex items-center text-xs text-gray-500 hover:text-primary dark:text-gray-400"
                   >
                     <LogOut size={14} className="mr-1" />
@@ -237,10 +314,10 @@ function DashboardContent({ children }: DashboardLayoutProps) {
       </div>
 
       {/* Main Content */}
-      <div className={`flex-1 overflow-auto transition-all duration-300 ${isSidebarOpen ? 'md:ml-64' : 'md:ml-20'}`}>
-        <div className="p-4 pt-16 md:p-8 md:pt-8">
-          {children}
-        </div>
+      <div
+        className={`flex-1 overflow-auto transition-all duration-300 ${isSidebarOpen ? "md:ml-64" : "md:ml-20"}`}
+      >
+        <div className="p-4 pt-16 md:p-8 md:pt-8">{children}</div>
       </div>
     </div>
   );

@@ -32,7 +32,16 @@ export async function POST(req: NextRequest) {
     const { email } = result.data;
 
     // Generate a 6-digit code
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const code = process.env.NODE_ENV === "development" 
+      ? "123456" // Use fixed code in development
+      : Math.floor(100000 + Math.random() * 900000).toString();
+
+    // For development, make the code very obvious
+    if (process.env.NODE_ENV === "development") {
+      console.log("============================================");
+      console.log(`📧 VERIFICATION CODE for ${email}: ${code}`);
+      console.log("============================================");
+    }
 
     // Set expiration time (10 minutes from now)
     const expires = new Date();

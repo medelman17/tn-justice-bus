@@ -9,7 +9,14 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // No import needed - enums are directly used from zod.enum
@@ -18,12 +25,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 const signUpSchema = z.object({
   firstName: z.string().min(1, { message: "First name is required" }),
   lastName: z.string().min(1, { message: "Last name is required" }),
-  email: z.string().email({ message: "Please enter a valid email address" }).optional(),
-  phone: z
-    .string()
-    .min(10, { message: "Phone number must be at least 10 digits" })
-    .regex(/^\+?[0-9]+$/, { message: "Please enter a valid phone number" })
-    .optional(),
+  email: z.string().optional(),
+  phone: z.string().optional(),
   preferredContactMethod: z.enum(["email", "phone", "sms"]),
 });
 
@@ -32,12 +35,12 @@ const refinedSignUpSchema = signUpSchema
   .refine(
     (data) => {
       if (data.preferredContactMethod === "email") {
-        return !!data.email;
+        return !!data.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email);
       }
       return true;
     },
     {
-      message: "Email address is required for email contact method",
+      message: "Please enter a valid email address",
       path: ["email"],
     }
   )
@@ -47,12 +50,16 @@ const refinedSignUpSchema = signUpSchema
         data.preferredContactMethod === "phone" ||
         data.preferredContactMethod === "sms"
       ) {
-        return !!data.phone;
+        return (
+          !!data.phone &&
+          data.phone.length >= 10 &&
+          /^\+?[0-9]+$/.test(data.phone)
+        );
       }
       return true;
     },
     {
-      message: "Phone number is required for phone/text contact method",
+      message: "Please enter a valid phone number (at least 10 digits)",
       path: ["phone"],
     }
   );
@@ -78,18 +85,33 @@ export function SignUpForm() {
 
   const onContactMethodChange = (value: string) => {
     setContactMethod(value);
-    form.setValue(
-      "preferredContactMethod",
-      value as "email" | "phone" | "sms"
-    );
+
+    // Clear any existing field when changing contact method
+    if (value === "email") {
+      form.setValue("phone", "");
+      form.clearErrors("phone");
+    } else {
+      form.setValue("email", "");
+      form.clearErrors("email");
+    }
+
+    form.setValue("preferredContactMethod", value as "email" | "phone" | "sms");
   };
+
+  // Add form state logging for debugging
+  const isValid = form.formState.isValid;
+  const isDirty = form.formState.isDirty;
+  const errors = form.formState.errors;
+  console.log("Form state:", { isValid, isDirty, errors });
 
   async function onSubmit(values: SignUpFormValues) {
     setIsSubmitting(true);
     setError(null);
+    console.log("Form submission started with values:", values);
 
     try {
       // Create user account
+      console.log("Sending request to /api/auth/register");
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
@@ -98,14 +120,30 @@ export function SignUpForm() {
         body: JSON.stringify(values),
       });
 
+      console.log("Register API response status:", response.status);
       const data = await response.json();
+      console.log("Register API response data:", data);
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to create account");
+        // Handle validation errors more gracefully
+        if (data.errors) {
+          // If we have detailed validation errors, show them
+          const errorMessages = Object.entries(data.errors)
+            .filter(([_, value]: [string, any]) => value?.message)
+            .map(([field, value]: [string, any]) => `${value.message}`)
+            .join(". ");
+
+          throw new Error(
+            errorMessages || data.message || "Failed to create account"
+          );
+        } else {
+          throw new Error(data.message || "Failed to create account");
+        }
       }
 
       // Sign in with the appropriate provider based on preferred contact method
       if (values.preferredContactMethod === "email") {
+        console.log("Signing in with email provider");
         await signIn("email", {
           email: values.email,
           redirect: false,
@@ -117,6 +155,7 @@ export function SignUpForm() {
         values.preferredContactMethod === "phone" ||
         values.preferredContactMethod === "sms"
       ) {
+        console.log("Redirecting to phone verification");
         // Redirect to phone verification
         router.push(`/auth/verify?type=phone&phone=${values.phone}`);
       } else {
@@ -137,7 +176,25 @@ export function SignUpForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form
+        onSubmit={(e) => {
+          console.log("Form submit event triggered");
+          e.preventDefault(); // Prevent default form submission
+
+          // Trigger form validation
+          form.trigger().then((isValid) => {
+            console.log("Form validation result:", isValid);
+            if (isValid) {
+              // If valid, manually call the onSubmit handler with current values
+              const values = form.getValues();
+              onSubmit(values);
+            } else {
+              console.log("Form validation failed:", form.formState.errors);
+            }
+          });
+        }}
+        className="space-y-6"
+      >
         {error && (
           <Alert variant="destructive">
             <AlertDescription>{error}</AlertDescription>
@@ -176,7 +233,9 @@ export function SignUpForm() {
 
         <div className="space-y-4">
           <div className="mb-4">
-            <h3 className="text-sm font-medium mb-2">Preferred Contact Method</h3>
+            <h3 className="text-sm font-medium mb-2">
+              Preferred Contact Method
+            </h3>
             <Tabs
               defaultValue="email"
               value={contactMethod}
@@ -252,7 +311,12 @@ export function SignUpForm() {
           </div>
         </div>
 
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={isSubmitting}
+          onClick={() => console.log("Button clicked directly")}
+        >
           {isSubmitting ? "Creating Account..." : "Create Account"}
         </Button>
       </form>
