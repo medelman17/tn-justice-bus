@@ -1,6 +1,6 @@
 # System Patterns: Tennessee Justice Bus Pre-Visit Screening
 
-**Date:** April 12, 2025 (Updated - Next.js 15 Route Groups Implementation)
+**Date:** April 13, 2025 (Updated - Justice Bus Events Implementation)
 
 ## 1. Core Architecture: JAMstack on Vercel
 
@@ -41,7 +41,14 @@ graph TD
       - Maintains original URL paths through subdirectories within groups
 2.  **Serverless & Edge Functions**: Backend logic deployed as Vercel Serverless Functions (Node.js runtime) or Edge Functions for performance-critical tasks.
 3.  **Infrastructure**:
-    - **Supabase PostgreSQL**: Primary relational database for structured data (users cases appointments).
+    - **Supabase PostgreSQL**: Primary relational database for structured data (users, cases, appointments).
+      - **JSONB Storage Pattern**: Used for flexible schema evolution in the Justice Bus Events system:
+        - Single table with a JSONB column storing complex nested structures
+        - Timestamp columns for tracking creation and updates
+        - UUID primary keys for reliable identification
+        - Avoids schema migrations for data model changes
+        - Enables a single database table to store diverse complex objects
+        - Allows for schema validation through Zod at the application layer
     - **Drizzle ORM**: Type-safe ORM layer for database interactions with Supabase PostgreSQL.
     - **Vercel KV (Redis)**: Used for session management caching frequently accessed data and potentially rate limiting.
     - **Vercel Blob Storage**: Secure storage for client-uploaded documents.
@@ -75,7 +82,18 @@ graph TD
       - Error handling for authentication failures
 7.  **State Management**: Primarily using React Query for server state caching/synchronization, supplemented by React Context API for global UI state.
 8.  **Form Handling**: Utilizing React Hook Form for efficient form state management and Zod for schema validation.
+    - **Schema Validation Pattern**: Comprehensive validation for complex data structures:
+      - Zod schema definitions that mirror database structures
+      - Validation for nested objects, arrays, and primitive types
+      - Type inference for TypeScript type safety
+      - Custom validation rules for domain-specific constraints
+      - Shared validation between client and server
 9.  **Progressive Web App (PWA)**: Service workers, manifest, and caching strategies to enable offline functionality and installability.
+    - **Offline-First IndexedDB Pattern**: Used for local data storage and synchronization:
+      - Structured storage of complex data objects
+      - Background synchronization when connectivity is restored
+      - Online/offline state detection and appropriate UI feedback
+      - Conflict resolution strategies
 10. **AI Integration**: Dedicated API routes (`/api/v1/ai/...`) to interact with the Anthropic API (Claude), encapsulating prompt engineering and context management.
 11. **Deployment Strategy**:
     - GitHub integration with Vercel for continuous deployment
@@ -85,6 +103,11 @@ graph TD
     - Vercel CLI for local interaction with deployments and environment management
 
 ## 3. Data Flow Patterns
+
+- **Events Data Flow**:
+
+  - **Read Path**: Client requests events data -> Check online status -> If online, fetch from API and cache in IndexedDB -> If offline, retrieve from IndexedDB -> Render UI with appropriate offline indicators
+  - **Write Path**: Client submits events data -> Check online status -> If online, send to API and update IndexedDB -> If offline, store in IndexedDB and queue for background sync -> Service worker processes sync queue when online
 
 - **Authentication Flow**:
   - User initiates sign-in/sign-up -> Form validation with Zod -> API routes (/api/auth/...) -> NextAuth.js -> Supabase Auth/DB -> JWT generation -> Client-side storage

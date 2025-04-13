@@ -1,6 +1,6 @@
 # Active Context: Tennessee Justice Bus Pre-Visit Screening
 
-**Date:** April 12, 2025 (Updated - NextAuth.js v5 Migration Completed)
+**Date:** April 13, 2025 (Updated - Justice Bus Events Implementation)
 
 ## 1. Current Focus
 
@@ -12,6 +12,7 @@
 - **~~User Dashboard~~**: ✓ Implemented responsive dashboard layout with user profile, case management, and statistics
 - **~~Route Groups Implementation~~**: ✓ Implemented Next.js 15 Route Groups for improved code organization
 - **~~Authentication Upgrade~~**: ✓ Successfully migrated to NextAuth.js v5 with edge compatibility
+- **~~Justice Bus Events~~**: ✓ Implemented events tracking system with flexible JSONB storage, validation, and offline support
 - **Core Feature Implementation**: Building application foundation components
   - **Client Intake Forms**: Building intake forms for client information
   - **~~Offline Support~~**: ✓ Implemented robust offline capabilities with service workers
@@ -19,6 +20,33 @@
 - **Memory Bank Maintenance**: Keeping documentation aligned with project progress
 
 ## 2. Recent Changes
+
+- **Justice Bus Events Implementation**:
+
+  - Implemented comprehensive Justice Bus events tracking system based on detailed JSON schema
+  - Created database schema for events using Drizzle ORM with JSONB storage for flexible schema evolution:
+    - Used a single table with a JSONB column for storing the entire event data structure
+    - Included proper timestamp columns for tracking creation and updates
+    - Implemented database migration using Drizzle Kit
+  - Built API endpoints for event management:
+    - Created `/api/events` GET endpoint for retrieving events data
+    - Added POST endpoint for creating and updating events
+  - Implemented comprehensive validation using Zod:
+    - Created detailed schema validation in `src/lib/validators/justice-bus-events.ts`
+    - Defined types and validation for nested structures like location information and GIS data
+    - Added proper validation for event types, statuses, and other enumerated values
+  - Developed robust offline-first capabilities:
+    - Created IndexedDB storage for caching events data in `src/lib/events-offline.ts`
+    - Implemented background synchronization for offline changes
+    - Added event listeners for online/offline status changes
+    - Integrated with existing service worker infrastructure
+  - Built responsive UI components:
+    - Created `JusticeBusEventsList` component for displaying events
+    - Added events page at `/dashboard/events`
+    - Integrated with dashboard navigation
+    - Implemented loading, error, and empty states
+    - Added offline indicators and warnings
+  - Updated dashboard layout to include Events navigation link
 
 - **NextAuth.js v5 Migration Implementation**:
 
@@ -266,7 +294,14 @@
       - ~~Replace adapter imports with new package names~~ ✓
       - ~~Update environment variables with new AUTH\_ prefix~~ ✓
       - ~~Thoroughly test authentication flows after migration~~ ✓
-    - **SMS Verification Enhancement** (Priority 6):
+    - **~~Justice Bus Events~~** (Priority 6): ✓
+      - ~~Implement database schema for event tracking~~ ✓
+      - ~~Create API endpoints for event management~~ ✓
+      - ~~Build validation layer with Zod~~ ✓
+      - ~~Add offline support for events data~~ ✓
+      - ~~Create UI components for displaying events~~ ✓
+      - ~~Integrate with dashboard~~ ✓
+    - **SMS Verification Enhancement** (Priority 7):
       - Implement database schema for verification codes
       - Create API routes for code generation and verification
       - Enhance verification UI components

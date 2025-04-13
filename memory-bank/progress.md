@@ -1,16 +1,40 @@
 # Project Progress: Tennessee Justice Bus Pre-Visit Screening
 
-**Date:** April 12, 2025 (Updated - NextAuth.js v5 Migration Completed)
+**Date:** April 13, 2025 (Updated - Justice Bus Events Implementation)
 
 ## 1. Current Status: Foundation Phase
 
-The project has completed the initial setup, bootstrapping, database implementation, UI component installation, authentication system implementation, home page creation, user dashboard implementation, offline support, notification system implementation, Next.js 15 Route Groups implementation, and NextAuth.js v5 migration phases (Week 1-3 of Phase 1). The Next.js application structure is in place with a fully defined database schema using Drizzle ORM, Shadcn UI components installed, a complete authentication system with email and phone-based sign-in flows, a responsive home page, and a user dashboard with profile and case management. We've successfully integrated the Software Planning Tool MCP server for enhanced project planning capabilities, implemented a comprehensive offline-first architecture including an SMS notification system with Knock, organized our code using Next.js 15 Route Groups, and successfully migrated to NextAuth.js v5 with edge compatibility.
+The project has completed the initial setup, bootstrapping, database implementation, UI component installation, authentication system implementation, home page creation, user dashboard implementation, offline support, notification system implementation, Next.js 15 Route Groups implementation, NextAuth.js v5 migration, and Justice Bus Events implementation phases (Week 1-3 of Phase 1). The Next.js application structure is in place with a fully defined database schema using Drizzle ORM, Shadcn UI components installed, a complete authentication system with email and phone-based sign-in flows, a responsive home page, and a user dashboard with profile and case management. We've successfully integrated the Software Planning Tool MCP server for enhanced project planning capabilities, implemented a comprehensive offline-first architecture including an SMS notification system with Knock, organized our code using Next.js 15 Route Groups, successfully migrated to NextAuth.js v5 with edge compatibility, and implemented a complete Justice Bus events tracking system with offline support and responsive UI components.
 
-**Overall Progress**: 70%
+**Overall Progress**: 75%
 
 ## 2. Completed Work
 
 - All previous work documented in previous progress.md updates
+- **Justice Bus Events Implementation**:
+  - Implemented comprehensive Justice Bus events tracking system based on a detailed JSON schema
+  - Created database schema using Drizzle ORM with JSONB storage for flexible schema evolution:
+    - Used a single table with a JSONB column for storing the entire event data structure
+    - Added timestamp columns for tracking creation and updates
+    - Generated database migration using Drizzle Kit
+  - Built API endpoints for event management:
+    - Created `/api/events` GET endpoint for retrieving events data
+    - Added POST endpoint for creating and updating events
+  - Implemented robust validation using Zod:
+    - Created detailed schema validation in `src/lib/validators/justice-bus-events.ts`
+    - Defined types and validation for nested structures like location information and GIS data
+    - Added validation for event types, statuses, and other enumerated values
+  - Developed comprehensive offline-first capabilities:
+    - Created IndexedDB storage for caching events data
+    - Implemented background synchronization for offline changes
+    - Added event listeners for online/offline status changes
+    - Integrated with existing service worker infrastructure
+  - Built responsive UI components:
+    - Created `JusticeBusEventsList` component for displaying events
+    - Added events page at `/dashboard/events`
+    - Integrated with dashboard navigation
+    - Implemented proper loading, error, and empty states
+    - Added offline indicators and warnings
 - **NextAuth.js v5 Migration Implementation**:
   - Successfully migrated from NextAuth.js v4 to v5 beta
   - Implemented a split configuration approach for edge compatibility:
@@ -153,6 +177,12 @@ The project has completed the initial setup, bootstrapping, database implementat
 ## 7. Decisions Log
 
 - All previous decisions documented in previous progress.md updates
+- **[2025-04-13]**: Implemented Justice Bus Events system using JSONB storage for flexibility and future schema evolution.
+- **[2025-04-13]**: Used direct database schema push approach to overcome migration issues with existing schemas.
+- **[2025-04-13]**: Designed comprehensive validation layer with Zod to ensure data integrity for Justice Bus events.
+- **[2025-04-13]**: Created offline-first events data system with IndexedDB and background synchronization.
+- **[2025-04-13]**: Implemented responsive UI components for displaying Justice Bus events in a card-based layout.
+- **[2025-04-13]**: Integrated events page into dashboard navigation for easy access to upcoming Justice Bus events.
 - **[2025-04-12]**: Implemented NextAuth.js v5 migration using a split configuration approach to maintain both edge compatibility and database adapter functionality.
 - **[2025-04-12]**: Added environment variable fallbacks for both AUTH* and NEXTAUTH* prefixes to support transition period.
 - **[2025-04-12]**: Updated middleware to use direct cookie checking to avoid edge-incompatible dependencies.
@@ -169,4 +199,4 @@ The project has completed the initial setup, bootstrapping, database implementat
 - **[2025-04-12]**: Refined UI for "How We Help You Prepare" features section with modern interactive card components, hover effects, and improved visual hierarchy.
 - **[2025-04-12]**: Enhanced Impact statistics section with improved centering, consistent sizing, and better responsiveness.
 
-This document reflects the project progress after completing the NextAuth.js v5 migration, implementing all the necessary changes to ensure edge compatibility, and updating the memory bank to reflect this milestone.
+This document reflects the project progress after completing the Justice Bus Events implementation, including database schema, API endpoints, validation, offline support, and UI components, as well as the previous NextAuth.js v5 migration.
