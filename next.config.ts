@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
   typescript: {
     // This doesn't mean that we're ignoring typcript errors,
     // but rather allowing the build to complete even with errors
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
 };
 
