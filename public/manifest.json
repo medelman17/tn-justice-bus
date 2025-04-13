@@ -1,0 +1,22 @@
+{
+  "name": "Tennessee Justice Bus Pre-Visit Screening",
+  "short_name": "Justice Bus",
+  "description": "Pre-visit screening and preparation for Tennessee Justice Bus clients",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f766e",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

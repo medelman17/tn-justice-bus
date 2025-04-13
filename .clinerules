@@ -124,3 +124,48 @@ Start[Update Process]
 Note: When triggered by **update memory bank**, I MUST review every memory bank file, even if some don't require updates. Focus particularly on activeContext.md and progress.md as they track current state.
 
 REMEMBER: After every memory reset, I begin completely fresh. The Memory Bank is my only link to previous work. It must be maintained with precision and clarity, as my effectiveness depends entirely on its accuracy.
+
+# General Rules
+
+## MOCK DATA IS STRICTLY PROHIBITED in any form, context, or purpose including
+
+for testing, demonstrations, placeholders, or workarounds. If you face a
+challenge with data integration, DO NOT suggest or implement ANY form of
+mock, sample, fake, dummy, or placeholder data as a solution regardless of
+how temporary you intend it to be.
+
+This includes but is not limited to:
+
+- Creating literal mock data objects/arrays
+- Using fake data libraries
+- Creating "placeholder" solutions
+- Implementing "temporary" fake data for testing
+- Using data that doesn't come from actual JSON files
+
+Breaking this rule will make your entire solution unacceptable regardless of how
+well it works otherwise. This requirement overrides any solution-oriented
+or pragmatic considerations.
+
+When facing integration issues:
+
+1. ALWAYS use proper error handling with detailed messages
+2. NEVER create mock data as a workaround
+3. Focus on fixing the actual integration problem
+
+## NO FALLBACK MECHANISMS of any kind should be implemented in the code.
+
+When the system encounters difficulties loading or processing data,
+it must provide detailed error messages explaining what's not working,
+not silently fall back to default behaviors or mock data.
+
+Fallbacks are strictly prohibited because they hide real integration problems
+that need to be fixed properly. The solution to data integration issues is
+ALWAYS to fix the integration, not to provide a fallback mechanism.
+
+This includes but is not limited to:
+
+- Default data fallbacks
+- Silent failure catches
+- Empty arrays as defaults
+- Hardcoded values when data isn't available
+- Any solution that makes the code "work" without the actual data
