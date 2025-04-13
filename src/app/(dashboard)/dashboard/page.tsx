@@ -194,7 +194,7 @@ export default function DashboardPage() {
       {/* Main Chat and Widgets Layout */}
       <div className="flex-1 flex flex-col md:flex-row gap-4 overflow-hidden">
         {/* Left Side - Chat Interface */}
-        <div className="flex-1 flex flex-col overflow-hidden order-2 md:order-1">
+        <div className="flex-1 flex flex-col overflow-hidden order-2 md:order-1 hidden md:flex">
           <DashboardChat />
         </div>
 
