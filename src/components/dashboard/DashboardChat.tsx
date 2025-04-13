@@ -104,7 +104,13 @@ export function DashboardChat() {
                   }`}
                 >
                   <p className="whitespace-pre-wrap text-sm md:text-base">
-                    {message.content}
+                    {message.parts && message.parts.length > 0
+                      ? message.parts
+                          .map((part, index) =>
+                            part.type === "text" ? part.text : ""
+                          )
+                          .join("")
+                      : message.content}
                   </p>
                 </div>
               </div>
