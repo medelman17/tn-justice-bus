@@ -77,11 +77,30 @@ Create additional files/folders within memory-bank/ when they help organize:
 
 ## Core Workflows
 
+### Review Technical Implementation Guides
+
+When a task relates to any of the following areas, I MUST first read the corresponding technical implementation guide in the docs/ folder:
+
+- Offline functionality and PWA features: Read [PWA Concepts Guide](docs/pwa-concepts-guide.md) and [Serwist Implementation Guide](docs/serwist-implementation-guide.md)
+- SMS notifications: Read [Knock Implementation Guide](docs/knock-implementation-guide.md)
+- Client intake forms: Read [Mastra Implementation Guide](docs/mastra-implementation-guide.md)
+- Next.js routing: Read [Next.js 15 Routing Guide](docs/nextjs15-routing-guide.md)
+
+The [docs/README.md](docs/README.md) file provides a comprehensive index of all technical implementation guides and should be consulted before beginning work on any feature. Technical implementation guides include critical details like architectural decisions, API integration points, and standardized approaches that must be followed for consistency.
+
+flowchart TD
+Start[Start] --> ReadMB[Read Memory Bank]
+ReadMB --> CheckDocs{Check if task relates <br/> to implementation guides}
+CheckDocs -->|Yes| ReadDocs[Read docs/README.md and <br/> relevant implementation guides]
+CheckDocs -->|No| Continue[Continue with task]
+ReadDocs --> Continue
+
 ### Plan Mode
 
 flowchart TD
 Start[Start] --> ReadFiles[Read Memory Bank]
-ReadFiles --> CheckFiles{Files Complete?}
+ReadFiles --> CheckDocs{Check docs/ if needed}
+CheckDocs --> CheckFiles{Files Complete?}
 
     CheckFiles -->|No| Plan[Create Plan]
     Plan --> Document[Document in Chat]
@@ -94,7 +113,8 @@ ReadFiles --> CheckFiles{Files Complete?}
 
 flowchart TD
 Start[Start] --> Context[Check Memory Bank]
-Context --> Update[Update Documentation]
+Context --> CheckDocs{Check docs/ if needed}
+CheckDocs --> Update[Update Documentation]
 Update --> Execute[Execute Task]
 Execute --> Document[Document Changes]
 
@@ -126,6 +146,19 @@ Note: When triggered by **update memory bank**, I MUST review every memory bank 
 REMEMBER: After every memory reset, I begin completely fresh. The Memory Bank is my only link to previous work. It must be maintained with precision and clarity, as my effectiveness depends entirely on its accuracy.
 
 # General Rules
+
+## Research Tools Exception
+
+Research-oriented MCP tools like FireCrawl, Brave Search, and other connected MCP servers providing research capabilities ARE ALLOWED AND ENCOURAGED to gather real information for documentation, education, and implementation guidance. This is an EXPLICIT EXCEPTION to any prohibition against using these tools in both PLAN mode and ACT mode.
+
+When conducting research:
+
+- Use `firecrawl_scrape`, `firecrawl_search`, and similar tools to gather accurate information
+- Use Brave Search to find relevant technical documentation and solutions
+- Use any other research MCP tools to gather real-world examples and reference implementations
+- Document research findings in the memory-bank for future reference
+
+This exception is specifically for gathering external reference information and does not apply to creating mock data for the application itself.
 
 ## MOCK DATA IS STRICTLY PROHIBITED in any form, context, or purpose including
 

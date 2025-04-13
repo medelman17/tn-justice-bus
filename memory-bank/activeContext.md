@@ -18,6 +18,16 @@
 
 ## 2. Recent Changes
 
+- **Mastra Integration for Intake Forms**:
+
+  - Reviewed and incorporated project brief addendum on Mastra integration
+  - Prepared to enhance client intake forms with Mastra AI agent framework
+  - Planning implementation of TypeScript-native AI agent with Claude 3.7 Sonnet
+  - Identified key integration points for graph-based workflow engine
+  - Mapped persistent memory capabilities to support offline-first architecture
+  - Aligned human-in-the-loop support with Justice Bus attorney involvement
+  - Explored RAG capabilities for Tennessee-specific legal knowledge base
+
 - **Next.js Viewport Configuration Update**:
 
   - Fixed build warning about unsupported metadata themeColor in icon configuration
@@ -84,8 +94,8 @@
   - `systemPatterns.md` created, detailing the JAMstack/Vercel architecture.
   - `techContext.md` created, listing the specific technologies and constraints.
   - This file (`activeContext.md`) created.
-  - `next-js-15-routing.md` created, documenting Next.js 15 routing features and implications.
   - Created `archived/` directory for archiving implementation plans and documentation.
+  - Documentation on Next.js 15 routing and Mastra integration moved to the docs directory as formal implementation guides.
 - **Deployment Setup**:
   - Configured Vercel deployment through GitHub connector
   - Set up environment variables in Vercel dashboard

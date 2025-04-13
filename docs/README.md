@@ -49,6 +49,36 @@ A detailed guide for SMS notifications using Knock:
 
 This document provides the technical reference for implementing and maintaining SMS communications in the Justice Bus application.
 
+### [Mastra Implementation Guide](./mastra-implementation-guide.md)
+
+A detailed implementation plan for client intake forms using the Mastra AI agent framework:
+
+- Architecture and component design
+- Database schema extensions for workflow management
+- UI component structure and implementation
+- Integration with Claude 3.7 Sonnet for conversational interfaces
+- Graph-based workflow engine for structured conversations
+- Persistent memory capabilities for offline support
+- RAG implementation for Tennessee-specific legal knowledge
+- Human-in-the-loop functionality for attorney review
+- Testing strategies and success metrics
+
+This document outlines the approach for enhancing client intake with AI agent capabilities while maintaining offline-first functionality.
+
+### [Next.js 15 Routing Guide](./nextjs15-routing-guide.md)
+
+A comprehensive guide covering Next.js 15 routing features and their application to the Justice Bus project:
+
+- App Router core concepts and key routing patterns
+- Promise-based page component props and migration strategies
+- Advanced loading UI and error handling implementations
+- Server-side routing features and middleware configurations
+- Performance optimizations for rural connectivity
+- Implementation steps for migrating from Next.js 14
+- Testing and deployment considerations
+
+This document provides the technical guidance for leveraging Next.js 15's routing capabilities to enhance the application's performance in rural areas with limited connectivity.
+
 ## Implementation Overview
 
 ### Offline Functionality
@@ -84,8 +114,13 @@ If you're new to the project:
    - Examine the source code in `/src/sw-custom.ts` and `/src/lib/offline-utils.ts`
 
 2. For notification functionality:
+
    - Read the [Knock Implementation Guide](./knock-implementation-guide.md) for implementation details
    - Examine the source code in `/src/lib/knock.ts` and notification-related API routes
+
+3. For client intake system:
+   - Review the [Mastra Implementation Guide](./mastra-implementation-guide.md) for the AI-powered intake approach
+   - Once implemented, examine the code in `/src/app/intake` and related components
 
 ## Contributing to Documentation
 

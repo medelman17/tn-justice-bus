@@ -1,16 +1,24 @@
 # Project Progress: Tennessee Justice Bus Pre-Visit Screening
 
-**Date:** April 12, 2025 (Updated - Knock SMS Notification System)
+**Date:** April 12, 2025 (Updated - Documentation Reorganization)
 
 ## 1. Current Status: Foundation Phase
 
-The project has completed the initial setup, bootstrapping, database implementation, UI component installation, authentication system implementation, home page creation, user dashboard implementation, offline support, and notification system implementation phases (Week 1-3 of Phase 1). The Next.js application structure is in place with a fully defined database schema using Drizzle ORM, Shadcn UI components installed, a complete authentication system with email and phone-based sign-in flows, a responsive home page, and a user dashboard with profile and case management. We've successfully integrated the Software Planning Tool MCP server for enhanced project planning capabilities, and implemented a comprehensive offline-first architecture including an SMS notification system with Knock.
+The project has completed the initial setup, bootstrapping, database implementation, UI component installation, authentication system implementation, home page creation, user dashboard implementation, offline support, and notification system implementation phases (Week 1-3 of Phase 1). The Next.js application structure is in place with a fully defined database schema using Drizzle ORM, Shadcn UI components installed, a complete authentication system with email and phone-based sign-in flows, a responsive home page, and a user dashboard with profile and case management. We've successfully integrated the Software Planning Tool MCP server for enhanced project planning capabilities, implemented a comprehensive offline-first architecture including an SMS notification system with Knock, and are now planning the integration of Mastra for enhanced client intake forms.
 
-**Overall Progress**: 60%
+**Overall Progress**: 62%
 
 ## 2. Completed Work
 
 - All previous work documented in previous progress.md updates
+- **Documentation Reorganization**:
+  - Moved and improved Mastra implementation plan to a formal implementation guide in `docs/mastra-implementation-guide.md`
+  - Enhanced and moved Next.js 15 routing documentation to `docs/nextjs15-routing-guide.md`
+  - Updated `docs/README.md` to include references to both new implementation guides
+  - Updated `.clinerules` file to require checking docs/README.md before working on related features
+  - Added explicit permission for using research-oriented MCP tools in both PLAN and ACT modes
+  - Removed duplicate files from memory-bank after migrating to docs directory
+  - Created centralized documentation structure with consistent formatting
 - **Software Planning Tool Integration**:
   - Successfully installed and configured the Software Planning Tool MCP server
   - Demonstrated its capabilities by initiating a planning session for a React-based dashboard application
@@ -77,5 +85,7 @@ The project has completed the initial setup, bootstrapping, database implementat
 - **[2025-04-12]**: Decision to integrate the Software Planning Tool MCP server for enhanced project planning capabilities.
 - **[2025-04-12]**: Decision to implement Knock SMS notification system with offline support instead of Twilio for SMS communication needs.
 - **[2025-04-12]**: Updated viewport configuration in Next.js application to follow Next.js 14+ best practices by moving themeColor to viewport export.
+- **[2025-04-12]**: Decision to centralize technical implementation guides in the docs/ directory with a consistent format.
+- **[2025-04-12]**: Updated .clinerules to explicitly allow research-oriented MCP tools in both PLAN and ACT modes.
 
 This document reflects the project progress after integrating the Knock SMS notification system with offline-support capabilities and developing a comprehensive solution for rural connectivity challenges.
