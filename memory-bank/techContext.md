@@ -1,6 +1,6 @@
 # Technical Context: Tennessee Justice Bus Pre-Visit Screening
 
-**Date:** April 12, 2025 (Updated - Vercel Deployment Completed)
+**Date:** April 14, 2025 (Updated - Testing Framework Implementation)
 
 ## 1. Core Technologies
 
@@ -45,16 +45,22 @@ The project is built primarily on the Vercel platform and Next.js framework. The
 
 - **Runtime**: Node.js (via Vercel Functions)
 - **Authentication**:
-  - NextAuth.js v5 with Supabase adapter
+  - NextAuth.js v5 with JWT-based authentication (no adapter needed)
   - JWT-based session management:
     - `strategy: "jwt"` configuration
     - 30-day session lifetime (`maxAge: 30 * 24 * 60 * 60`)
     - Custom JWT and session callbacks
     - Token includes user ID, email, phone, and timestamp data
-  - Multiple authentication strategies:
-    - EmailProvider for email-based authentication and magic links
-    - CredentialsProvider for phone-based authentication with code verification
-    - 6-digit verification code validation for phone authentication
+  - Multiple authentication strategies using CredentialsProvider:
+    - `phone-login` provider for phone-based authentication with code verification
+    - `email-login` provider for email-based authentication with code verification
+    - 6-digit verification code validation for both authentication methods
+    - Consistent verification flow across authentication methods
+  - Verification code storage:
+    - Database-backed code storage with expiration timestamps
+    - Support for both email and phone verification
+    - Secure code generation and validation
+    - Automatic cleanup of used or expired codes
   - Custom auth pages configuration:
     - `signIn: "/auth/signin"`
     - `signOut: "/auth/signout"`
@@ -103,6 +109,12 @@ The project is built primarily on the Vercel platform and Next.js framework. The
   - `/src/lib` - Utility functions and shared code:
     - `/src/lib/utils.ts` - General utilities including the `cn()` function for class merging
     - `/src/lib/db` - Database utilities and client
+    - `/src/lib/events-offline.ts` - Offline storage for events data
+    - `/src/lib/offline-utils.ts` - Utilities for offline functionality
+  - `/src/test` - Testing utilities and configuration:
+    - `/src/test/setup.ts` - Global test setup and utilities
+    - `/src/test/README.md` - Testing documentation
+    - `/src/lib/__tests__` - Unit tests for library functions
   - `/src/types` - Type definitions:
     - `/src/types/next-auth.d.ts` - TypeScript declarations for NextAuth.js
     - `/src/types/app.d.ts` - Application-specific type definitions
@@ -115,6 +127,7 @@ The project is built primarily on the Vercel platform and Next.js framework. The
   - `postcss.config.mjs` - PostCSS configuration for Tailwind
   - `eslint.config.mjs` - ESLint configuration
   - `package.json` - Project dependencies and scripts
+  - `vitest.config.ts` - Vitest testing configuration
 - **Version Control**: Git with GitHub repository at https://github.com/medelman17/tn-justice-bus
 - **CI/CD**:
   - Vercel Git Integration with GitHub connector (configured)
@@ -122,7 +135,20 @@ The project is built primarily on the Vercel platform and Next.js framework. The
   - Production deployments from main branch
   - Environment variables configured for staging and production
 - **Testing**:
-  - Unit/Integration: Jest + React Testing Library (to be implemented)
+  - **Vitest**: Primary testing framework for unit and integration tests
+    - Configuration with happy-dom for browser API testing
+    - Miniflare for service worker testing
+    - Support for testing offline functionality
+    - Proper mocking utilities for IndexedDB and fetch
+  - **Test Structure**:
+    - Unit tests in `__tests__` directories near the code they test
+    - Shared test utilities in `/src/test`
+    - Testing isolation principles to avoid production dependencies
+  - **Testing Scripts**:
+    - `pnpm test` - Run all tests once
+    - `pnpm test:watch` - Run tests in watch mode
+    - `pnpm test:ui` - Open interactive test UI
+    - `pnpm test:coverage` - Generate coverage reports
   - E2E: Playwright (to be implemented)
   - Accessibility: Axe, Manual testing (to be implemented)
   - Performance: Lighthouse (to be implemented)

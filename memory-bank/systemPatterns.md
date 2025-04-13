@@ -1,6 +1,6 @@
 # System Patterns: Tennessee Justice Bus Pre-Visit Screening
 
-**Date:** April 13, 2025 (Updated - Justice Bus Events Implementation)
+**Date:** April 14, 2025 (Updated - Testing Framework Implementation)
 
 ## 1. Core Architecture: JAMstack on Vercel
 
@@ -62,16 +62,17 @@ graph TD
     - Implements responsive design patterns with Tailwind's utility classes
 5.  **API Layer**: RESTful APIs exposed via Next.js API routes (`/api/v1/...`).
 6.  **Authentication**:
-    - NextAuth.js with Supabase adapter for seamless integration with Supabase Auth
+    - NextAuth.js v5 with JWT-based authentication (removed adapter dependency)
     - JWT-based session strategy optimized for offline support:
       - 30-day session lifetime for extended offline usage
       - Token includes user ID, email, phone, and creation timestamp (iat)
       - Custom JWT callback to maintain critical user data in the token
       - Secure token storage with encryption for offline authentication
-    - Multiple authentication providers:
-      - EmailProvider for email-based authentication with configurable server settings
-      - CredentialsProvider for phone-based authentication with 6-digit code verification
-      - Support for Magic Links through email workflow
+    - Multiple authentication providers using CredentialsProvider:
+      - `phone-login` provider for phone-based authentication with code verification
+      - `email-login` provider for email-based authentication with code verification
+      - Consistent 6-digit verification code pattern for both methods
+      - Direct database operations for verification and user management
     - User management:
       - Automatic user lookup by phone or email
       - New user creation for first-time authentication
@@ -118,9 +119,16 @@ graph TD
   - **Write Path**: Client submits events data -> Check online status -> If online, send to API and update IndexedDB -> If offline, store in IndexedDB and queue for background sync -> Service worker processes sync queue when online
 
 - **Authentication Flow**:
-  - User initiates sign-in/sign-up -> Form validation with Zod -> API routes (/api/auth/...) -> NextAuth.js -> Supabase Auth/DB -> JWT generation -> Client-side storage
+  - User initiates sign-in/sign-up -> Form validation with Zod -> API routes (/api/auth/...) -> NextAuth.js -> Direct DB operations -> JWT generation -> Client-side storage
   - For phone authentication: Phone entry -> SMS code sent via Knock -> Code verification -> User creation/lookup -> JWT session
-  - For email authentication: Email entry -> Magic link sent -> Link verification -> User creation/lookup -> JWT session
+  - For email authentication: Email entry -> Verification code sent via Knock -> Code verification -> User creation/lookup -> JWT session
+  - Consistent verification flow:
+    - Send 6-digit code via appropriate channel (SMS/email)
+    - Store code in database with 10-minute expiration window
+    - Verify code submission against database record
+    - Delete code after successful verification
+    - Create user if needed or lookup existing user
+    - Generate JWT session with user information
   - On successful authentication: Update last_login timestamp -> Generate session with user data -> Redirect to protected route
 - **Client Intake**: Multi-step forms capture user data -> API routes -> Supabase PostgreSQL. AI assists via separate API calls.
 - **Document Upload**: Client uploads file -> Frontend sends to API route -> API route streams to Vercel Blob Storage -> Stores URL/metadata in Supabase PostgreSQL.
@@ -136,4 +144,45 @@ graph TD
 - **AI Interaction**: Prompt engineering and context management are key to providing helpful, accurate, and safe assistance without giving legal advice. Requires careful boundary setting and potential human review loops.
 - **Offline Strategy**: Implementing reliable offline data storage, caching, and background synchronization is crucial for rural usability.
 
-_This document is based on `projectBrief.md`, `justice-bus-tdd.md`, implementation details from the authentication system, and the completed Vercel deployment setup._
+## 5. Testing Patterns
+
+The project implements a structured approach to testing, with an emphasis on proper isolation of test code from production code and a focus on testing offline functionality:
+
+1. **Testing Framework**: Vitest serves as the primary testing framework with specialized environments:
+
+   - **happy-dom**: For general browser API testing
+   - **Miniflare**: For service worker and offline functionality testing
+   - **Global Test Setup**: Centralized setup in `src/test/setup.ts` for consistent testing environment
+
+2. **Test Organization Pattern**: Tests are organized to mirror the application structure:
+
+   - **Unit Tests**: Located in `__tests__` directories adjacent to the code being tested
+   - **Integration Tests**: Located in their own directories to test feature interactions
+   - **Shared Utilities**: Common testing utilities in `src/test` directory
+
+3. **Mocking Pattern**: Strict isolation of mock code from production code:
+
+   - **Production Code**: Never contains mock data or fallback mechanisms
+   - **Test Files**: All mock data is isolated in test files, never leaking into production
+   - **Type Safety**: Mock data follows the same type definitions as production data
+
+4. **Offline Testing Pattern**: Specialized approach for testing offline functionality:
+
+   - **IndexedDB Mocking**: Controlled mock implementation of IndexedDB for testing
+   - **Network Status Simulation**: Helper functions to simulate online/offline transitions
+   - **Event Testing**: Tests for event dispatching and handling during network transitions
+
+5. **Test Data Pattern**: Clear approach to test data that follows principles of the .clinerules file:
+
+   - **Real Data Structure**: Test data matches production schemas and validation
+   - **No Fallbacks**: Tests verify proper error handling instead of fallbacks
+   - **Explicit Mocking**: All mocks are explicitly declared with clear purpose
+
+6. **Offline Testing Flow Pattern**:
+   - Start with online state → Test initial data loading → Transition to offline →
+     Verify data persistence → Test offline operations → Return to online →
+     Verify sync behavior → Verify data integrity
+
+This approach ensures that testing properly validates the offline-first functionality that is critical to the application's success in rural areas with limited connectivity.
+
+_This document is based on `projectBrief.md`, `justice-bus-tdd.md`, implementation details from the authentication system, the Vercel deployment setup, and the testing framework implementation._

@@ -1,6 +1,6 @@
 # Active Context: Tennessee Justice Bus Pre-Visit Screening
 
-**Date:** April 13, 2025 (Updated - Justice Bus Events Implementation)
+**Date:** April 14, 2025 (Updated - Testing Framework Implementation)
 
 ## 1. Current Focus
 
@@ -13,13 +13,112 @@
 - **~~Route Groups Implementation~~**: ✓ Implemented Next.js 15 Route Groups for improved code organization
 - **~~Authentication Upgrade~~**: ✓ Successfully migrated to NextAuth.js v5 with edge compatibility
 - **~~Justice Bus Events~~**: ✓ Implemented events tracking system with flexible JSONB storage, validation, and offline support
+- **~~Admin Dashboard~~**: ✓ Implemented admin user management interface with CRUD operations
+- **~~Testing Framework~~**: ✓ Implemented Vitest testing framework with offline functionality testing
 - **Core Feature Implementation**: Building application foundation components
   - **~~Client Intake System~~**: ✓ Implemented AI-powered client intake with Mastra framework
   - **~~Offline Support~~**: ✓ Implemented robust offline capabilities with service workers
   - **~~Notification System~~**: ✓ Implemented Knock SMS notifications with offline support
+  - **Testing Implementation**: Expanding test coverage for core application features
 - **Memory Bank Maintenance**: Keeping documentation aligned with project progress
 
 ## 2. Recent Changes
+
+- **Testing Framework Implementation**:
+
+  - Implemented comprehensive testing framework using Vitest:
+    - Created `vitest.config.ts` with configuration for component and service worker testing
+    - Set up testing environments for different test types:
+      - happy-dom for standard browser API testing
+      - Miniflare environment for service worker and offline functionality testing
+    - Implemented test utilities in `src/test/setup.ts`:
+      - IndexedDB mock for testing database operations
+      - Network status simulation for testing online/offline transitions
+      - Global test helper functions for common testing tasks
+    - Created comprehensive testing documentation in `src/test/README.md`
+  - Implemented offline storage tests:
+    - Created `src/lib/__tests__/offline-storage.test.ts` for testing IndexedDB operations
+    - Implemented proper mocking patterns that isolate test data from production code
+    - Added tests for storing and retrieving event data
+    - Created tests for offline event synchronization
+    - Implemented tests for online/offline state transitions
+  - Updated implementation guide checklist:
+    - Marked completed testing tasks in `docs/implementation-guide-checklist.md`
+    - Added testing guidelines section emphasizing proper data handling
+    - Updated environment setup requirements with Vitest dependencies
+  - Configured testing scripts in package.json:
+    - Added `test` command for running all tests
+    - Implemented `test:watch` for development mode testing
+    - Added `test:ui` for visual test interface
+    - Created `test:coverage` for test coverage reports
+  - The testing implementation strictly follows the project's data handling principles:
+    - No mock data is ever used in production code
+    - Test-only mocks are clearly isolated in test files
+    - No fallback mechanisms in production code
+    - All tests use proper error handling
+    - Mock data follows the same patterns as real data
+
+- **Admin Dashboard Implementation**:
+
+  - Implemented comprehensive admin user management interface with CRUD operations:
+    - Created admin dashboard for user management at `/dashboard/admin/users`
+    - Implemented user listing interface with search functionality
+    - Added user detail editing with form dialog
+    - Created user deletion with confirmation dialog
+    - Built responsive table interface for displaying user information
+  - Built robust API endpoints for user management:
+    - Created `/api/admin/users` endpoint for listing and creating users
+    - Implemented `/api/admin/users/[id]` endpoint for updating and deleting users
+    - Added proper authentication checks to secure admin routes
+    - Implemented error handling and validation
+  - Created reusable components for admin functionality:
+    - Implemented `UserDialog` component for creating/editing users
+    - Built `DeleteConfirmDialog` component for confirmation prompts
+    - Added responsive loading states and error messaging
+  - Updated sidebar navigation to include admin section
+  - Implemented Next.js 15 compatibility:
+    - Updated route handlers to work with Promise-based params
+    - Fixed type issues in API routes and components
+    - Ensured proper async/await patterns in route handlers
+    - Resolved React hook dependency issues with useCallback
+  - This implementation provides a complete admin interface for user management with:
+    - Full CRUD operations for user accounts
+    - Responsive design for all screen sizes
+    - Robust error handling and validation
+    - Secure authentication checks
+    - Next.js 15 compatibility
+
+- **Authentication System Optimization**:
+
+  - Removed the Supabase adapter from NextAuth.js:
+    - Eliminated unnecessary database operations for JWT session strategy
+    - Improved alignment with offline-first approach
+    - Uninstalled `@auth/supabase-adapter` dependency
+    - Modified authentication configuration to use direct database operations
+  - Enhanced authentication providers:
+    - Renamed phone provider to `phone-login` for clarity
+    - Added new `email-login` provider using CredentialsProvider
+    - Implemented consistent verification code pattern for both methods
+  - Enhanced verification codes system:
+    - Modified `verification_codes` table to support both phone and email
+    - Made the `phone` field optional
+    - Added new `email` field for email verification
+    - Updated database schema and applied migrations
+  - Created email verification endpoint:
+    - Added `/api/auth/send-email-verification` API endpoint
+    - Integrated with Knock notification system for delivery
+    - Implemented security measures and error handling
+  - Built email sign-in form component:
+    - Created two-step verification process (email → code)
+    - Added resend functionality for better user experience
+    - Implemented proper error handling and validation
+    - Matched styling and UX patterns with phone verification
+  - This optimization improves the authentication system by:
+    - Making it more consistent with the JWT-based session strategy
+    - Removing unnecessary database operations for authentication
+    - Providing a more consistent experience across authentication methods
+    - Better supporting offline-first functionality
+    - Simplifying the codebase by removing adapter dependencies
 
 - **User Personas and Access Patterns Documentation**:
 
@@ -394,11 +493,17 @@
       - ~~Add rate limiting and security measures~~ ✓
       - ~~Integrate with Knock SMS system~~ ✓
       - ~~Test verification flows thoroughly~~ ✓
+    - **~~Admin Dashboard~~** (Priority 8): ✓
+      - ~~Create user management interface~~ ✓
+      - ~~Implement user CRUD operations~~ ✓
+      - ~~Build secure API endpoints~~ ✓
+      - ~~Add admin section to navigation~~ ✓
+      - ~~Ensure Next.js 15 compatibility~~ ✓
 
 ## 4. Active Decisions & Considerations
 
 - **Technology Stack**: Confirmed commitment to Next.js 14+, Vercel platform (for deployment, KV, Blob), Supabase (for PostgreSQL database), Knock (for SMS), TypeScript, Tailwind CSS, Shadcn UI, NextAuth.js, and Claude AI. Researched Next.js 15 routing features and NextAuth.js v5 for future upgrades.
-- **Authentication System**: Successfully migrated to NextAuth.js v5 with edge compatibility using split configuration approach that maintains database adapter functionality while ensuring middleware compatibility.
+- **Authentication System**: Optimized NextAuth.js implementation by removing the Supabase adapter and using CredentialsProvider for both email and phone authentication, which better aligns with our JWT-based session strategy and offline-first approach.
 - **Verification System Enhancement**: Planning to improve the SMS verification system with secure code storage, proper integration with Knock, and enhanced security measures.
 - **Deployment Workflow**: Using Vercel CLI for interacting with deployments, managing environment variables, and monitoring application status from the command line.
 - **Package Manager**: Using `pnpm` as requested.
@@ -427,4 +532,4 @@
 - The split configuration approach for NextAuth.js v5 successfully addresses the edge compatibility requirements while maintaining database adapter functionality.
 - The current SMS verification approach works for development but needs enhancement for production security.
 
-_This document reflects the project state after bootstrapping the Next.js application, implementing the authentication system, setting up Vercel deployment with CLI access, implementing the user dashboard interface with profile and case management, creating a responsive home page, researching Next.js 15 routing features, implementing robust offline capabilities with service workers, implementing the Knock SMS notification system with offline support, successfully migrating to NextAuth.js v5 with edge compatibility, and creating detailed implementation plans for SMS verification enhancement._
+_This document reflects the project state after bootstrapping the Next.js application, implementing the authentication system, setting up Vercel deployment with CLI access, implementing the user dashboard interface with profile and case management, creating a responsive home page, researching Next.js 15 routing features, implementing robust offline capabilities with service workers, implementing the Knock SMS notification system with offline support, successfully migrating to NextAuth.js v5 with edge compatibility, implementing the comprehensive Justice Bus events system, and implementing the admin user management dashboard with full CRUD operations._
