@@ -5,6 +5,7 @@ import { pgSchema } from "drizzle-orm/pg-core";
 // import { cases } from "./cases";
 // import { justiceBusVisits } from "./justice-bus-visits";
 import { justiceBusEvents } from "./justice-bus-events";
+import { verificationCodes } from "./verification-codes";
 // import { appointments } from "./appointments";
 // import { documents } from "./documents";
 // import { intakeResponses } from "./intake-responses";
@@ -27,6 +28,7 @@ export {
   // cases,
   // justiceBusVisits,
   justiceBusEvents,
+  verificationCodes,
   // appointments,
   // documents,
   // intakeResponses,
@@ -48,4 +50,5 @@ export * from "./appointments";
 export * from "./documents";
 export * from "./intake-responses";
 export * from "./client-sessions";
+export * from "./verification-codes";
 export * from "./types";

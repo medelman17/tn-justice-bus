@@ -1,5 +1,6 @@
 // Utilities for offline support
 import { NotificationPayload, NotificationOptions } from "@/lib/knock";
+import { syncOfflineVerificationAttempts } from "@/lib/offline-verification";
 
 // Type definitions
 interface FormData {
@@ -184,6 +185,18 @@ export async function queueNotification(
 export function setupOfflineSync(): void {
   window.addEventListener("online", async () => {
     console.log("Back online, checking for pending form submissions...");
+
+    // Process verification attempts
+    try {
+      const processedCount = await syncOfflineVerificationAttempts();
+      if (processedCount > 0) {
+        console.log(
+          `Processed ${processedCount} offline verification attempts`
+        );
+      }
+    } catch (error) {
+      console.error("Error processing offline verification attempts:", error);
+    }
 
     // Process form submissions
     try {

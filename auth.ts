@@ -2,8 +2,8 @@ import NextAuth from "next-auth";
 import { SupabaseAdapter } from "@auth/supabase-adapter";
 import EmailProvider from "next-auth/providers/email";
 import { db } from "@/lib/db";
-import { eq } from "drizzle-orm";
-import { users } from "@/db/schema";
+import { eq, and, gt } from "drizzle-orm";
+import { users, verificationCodes } from "@/db/schema";
 import { authConfig } from "./auth.config";
 
 // Initialize Supabase client for auth operations
@@ -35,13 +35,29 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         if (!credentials?.phone || !credentials.code) return null;
 
         try {
-          // In a real application, we would verify the code against a stored code
-          // For development, we'll validate any 6-digit code format
           const phoneStr = String(credentials.phone);
           const codeStr = String(credentials.code);
-          const isValidCode = codeStr.length === 6 && /^\d+$/.test(codeStr);
 
-          if (!isValidCode) return null;
+          // Format validation
+          const isValidFormat = codeStr.length === 6 && /^\d+$/.test(codeStr);
+          if (!isValidFormat) return null;
+
+          // Look up the stored verification code
+          const storedCode = await db.query.verificationCodes.findFirst({
+            where: and(
+              eq(verificationCodes.phone, phoneStr),
+              eq(verificationCodes.code, codeStr),
+              gt(verificationCodes.expires, new Date())
+            ),
+          });
+
+          // If no valid code is found, authentication fails
+          if (!storedCode) return null;
+
+          // Delete the used code to prevent reuse
+          await db
+            .delete(verificationCodes)
+            .where(eq(verificationCodes.id, storedCode.id));
 
           // Find the user by phone number
           const user = await db.query.users.findFirst({

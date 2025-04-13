@@ -18,12 +18,16 @@ export const authConfig: NextAuthConfig = {
       async authorize(credentials, request) {
         if (!credentials?.phone || !credentials.code) return null;
 
-        // Simple validation for edge compatibility
+        // Simple format validation for edge compatibility
+        // The actual verification against stored codes happens in auth.ts
         const phoneStr = String(credentials.phone);
         const codeStr = String(credentials.code);
-        const isValidCode = codeStr.length === 6 && /^\d+$/.test(codeStr);
 
-        if (!isValidCode) return null;
+        // Validate phone number and code format
+        const isValidPhone = /^\+?[0-9]{10,15}$/.test(phoneStr);
+        const isValidCode = codeStr.length === 6 && /^\d{6}$/.test(codeStr);
+
+        if (!isValidPhone || !isValidCode) return null;
 
         // The actual user lookup and creation happens in auth.ts
         return {
@@ -60,9 +64,10 @@ export const authConfig: NextAuthConfig = {
     },
     jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
-        token.phone = user.phone;
-        token.email = user.email;
+        // Ensure all values are properly typed as strings
+        token.id = user.id as string;
+        token.phone = (user.phone as string) || "";
+        token.email = (user.email as string) || "";
       }
 
       if (!token.iat) {
@@ -73,12 +78,12 @@ export const authConfig: NextAuthConfig = {
     },
     session({ session, token }) {
       if (token && session.user) {
-        // Make sure token.id exists and is a string
-        session.user.id = token.id ? String(token.id) : "unknown-id";
+        // Convert all values to strings with proper fallbacks to ensure type safety
+        session.user.id = String(token.id || "unknown-id");
 
-        // Handle phone and email similarly, using null instead of undefined to match type definitions
-        session.user.phone = token.phone ? String(token.phone) : null;
-        session.user.email = token.email ? String(token.email) : null;
+        // The NextAuth types expect these to be string | null
+        session.user.phone = token.phone ? String(token.phone) : "";
+        session.user.email = token.email ? String(token.email) : "";
       }
       return session;
     },
