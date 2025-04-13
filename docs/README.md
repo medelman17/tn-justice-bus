@@ -79,6 +79,18 @@ A comprehensive guide covering Next.js 15 routing features and their application
 
 This document provides the technical guidance for leveraging Next.js 15's routing capabilities to enhance the application's performance in rural areas with limited connectivity.
 
+### [Route Groups Implementation](./route-groups-implementation.md)
+
+A detailed explanation of the Next.js 15 Route Groups implementation in the Tennessee Justice Bus application:
+
+- Directory structure and organization
+- Benefits of using route groups
+- Implementation approach and notes
+- Next steps for further Next.js 15 migration
+- References to related documentation
+
+This document provides information about our current route group implementation, which represents Phase 1 of our Next.js 15 routing features adoption.
+
 ## Implementation Overview
 
 ### Offline Functionality

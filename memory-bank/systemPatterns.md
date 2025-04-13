@@ -1,6 +1,6 @@
 # System Patterns: Tennessee Justice Bus Pre-Visit Screening
 
-**Date:** April 12, 2025 (Updated - Vercel Deployment Completed)
+**Date:** April 12, 2025 (Updated - Next.js 15 Route Groups Implementation)
 
 ## 1. Core Architecture: JAMstack on Vercel
 
@@ -34,6 +34,11 @@ graph TD
 ## 2. Key Architectural Components & Patterns
 
 1.  **Next.js App Router**: Enables server-centric routing, Server Components, and API routes within a unified framework.
+    - **Route Groups**: Organizes routes logically without affecting URL structure:
+      - `(auth)` groups authentication-related routes
+      - `(dashboard)` groups dashboard-related features
+      - `(offline)` groups offline functionality
+      - Maintains original URL paths through subdirectories within groups
 2.  **Serverless & Edge Functions**: Backend logic deployed as Vercel Serverless Functions (Node.js runtime) or Edge Functions for performance-critical tasks.
 3.  **Infrastructure**:
     - **Supabase PostgreSQL**: Primary relational database for structured data (users cases appointments).

@@ -10,6 +10,7 @@
 - **~~Authentication System~~**: ✓ Implemented NextAuth.js with Supabase adapter, JWT sessions, email and phone authentication
 - **~~Vercel Deployment~~**: ✓ Set up deployment via GitHub connector to Vercel with CLI access
 - **~~User Dashboard~~**: ✓ Implemented responsive dashboard layout with user profile, case management, and statistics
+- **~~Route Groups Implementation~~**: ✓ Implemented Next.js 15 Route Groups for improved code organization
 - **Core Feature Implementation**: Building application foundation components
   - **Client Intake Forms**: Building intake forms for client information
   - **~~Offline Support~~**: ✓ Implemented robust offline capabilities with service workers
@@ -17,6 +18,23 @@
 - **Memory Bank Maintenance**: Keeping documentation aligned with project progress
 
 ## 2. Recent Changes
+
+- **Next.js 15 Route Groups Implementation**:
+
+  - Reorganized application routes using Next.js 15 Route Groups:
+    - Created logical route groupings with `(auth)`, `(dashboard)`, and `(offline)` folders
+    - Maintained original URL structure by creating subdirectories within route groups:
+      - `(auth)/auth/` → `/auth/`
+      - `(dashboard)/dashboard/` → `/dashboard/`
+      - `(offline)/offline/` → `/offline/`
+    - Resolved conflicts between parallel routes resolving to the same path
+    - Migrated all components and files to appropriate locations in the new structure
+    - Verified functionality of all routes and navigation
+    - Created comprehensive documentation in `docs/route-groups-implementation.md`
+    - Updated documentation index in `docs/README.md`
+    - Updated memory bank files to reflect new structure
+  - This implementation represents Phase 1 of our Next.js 15 routing features adoption
+  - Planned for subsequent phases to include Promise-based props, loading/error UI, and parallel/intercepting routes
 
 - **Mastra Implementation for Client Intake Forms**:
 
