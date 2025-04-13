@@ -44,8 +44,8 @@ export default function SignOutPage() {
           <div className="text-center text-muted-foreground">
             <p className="mb-2">Thank you for using Tennessee Justice Bus.</p>
             <p className="text-sm">
-              For security reasons, please close your browser if you're on a
-              shared computer.
+              For security reasons, please close your browser if you&apos;re on
+              a shared computer.
             </p>
           </div>
         </CardContent>

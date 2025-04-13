@@ -129,8 +129,14 @@ export function SignUpForm() {
         if (data.errors) {
           // If we have detailed validation errors, show them
           const errorMessages = Object.entries(data.errors)
-            .filter(([_, value]: [string, any]) => value?.message)
-            .map(([field, value]: [string, any]) => `${value.message}`)
+            .filter(([_, value]) => {
+              const typedValue = value as { message?: string };
+              return !!typedValue.message;
+            })
+            .map(([_, value]) => {
+              const typedValue = value as { message: string };
+              return typedValue.message;
+            })
             .join(". ");
 
           throw new Error(

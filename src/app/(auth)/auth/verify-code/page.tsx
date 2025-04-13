@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -37,7 +37,8 @@ const verificationSchema = z.object({
     .regex(/^\d+$/, { message: "Verification code must contain only digits." }),
 });
 
-export default function VerifyCodePage() {
+// Main component that uses search params
+function VerifyCodeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
@@ -229,5 +230,20 @@ export default function VerifyCodePage() {
         </CardFooter>
       </Card>
     </div>
+  );
+}
+
+// Wrapper component with Suspense
+export default function VerifyCodePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="container flex h-screen w-full max-w-[500px] flex-col items-center justify-center">
+          Loading...
+        </div>
+      }
+    >
+      <VerifyCodeContent />
+    </Suspense>
   );
 }

@@ -60,8 +60,29 @@ export function EmailSignInForm() {
         throw new Error(result.message || "Failed to send verification code");
       }
 
-      // Show success message before redirecting
-      setSuccess("Verification code sent! Redirecting to verification page...");
+      // If we're in development or had a notification error but the code was still created
+      if (process.env.NODE_ENV === "development" || result.notificationError) {
+        // Show specific message for development environment
+        if (process.env.NODE_ENV === "development") {
+          setSuccess(
+            "Development mode: Verification code can be found in server console. Redirecting..."
+          );
+        } else if (result.notificationError) {
+          // Show message for notification delivery issues
+          setSuccess(
+            "Verification code created but could not be delivered. Please check with administrator. Redirecting..."
+          );
+        } else {
+          setSuccess(
+            "Verification code sent! Redirecting to verification page..."
+          );
+        }
+      } else {
+        // Standard success message
+        setSuccess(
+          "Verification code sent! Redirecting to verification page..."
+        );
+      }
 
       // Redirect to the dedicated verification page
       setTimeout(() => {

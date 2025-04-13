@@ -148,20 +148,20 @@ async function handleVerificationFallback(
     // First, make sure the user exists in Knock
     if (typeof recipient !== "string") {
       // For non-string recipients, we have the user data
-      const userInfo: any = {
+      const userInfo: Record<string, string | number | undefined> = {
         id: recipientId,
       };
 
       // Add email if present
       if ("email" in recipient) {
-        userInfo.email = (recipient as any).email;
+        userInfo.email = (recipient as Record<string, string>).email;
       }
 
       // Add phone if present
       if ("phone_number" in recipient) {
-        userInfo.phone_number = (recipient as any).phone_number;
+        userInfo.phone_number = (recipient as Record<string, string>).phone_number;
       } else if ("phoneNumber" in recipient) {
-        userInfo.phone_number = (recipient as any).phoneNumber;
+        userInfo.phone_number = (recipient as Record<string, string>).phoneNumber;
       }
 
       // Identify user to Knock
@@ -231,15 +231,16 @@ export async function triggerWorkflowWithOfflineSupport(
     try {
       // Try to trigger the workflow normally
       return await knock.workflows.trigger(workflowKey, workflowPayload);
-    } catch (error: any) {
-      console.warn(`Workflow trigger error: ${error.message}`);
+    } catch (error: unknown) {
+      console.warn(`Workflow trigger error: ${error instanceof Error ? error.message : String(error)}`);
 
       // If the error is a 404 (workflow not found), try the fallback
       if (
+        error instanceof Error &&
         error.message &&
         (error.message.includes("404") ||
           error.message.includes("not found") ||
-          error.status === 404)
+          (error as { status?: number }).status === 404)
       ) {
         console.log("Workflow not found, attempting fallback delivery");
         return handleVerificationFallback(workflowKey, payload);
