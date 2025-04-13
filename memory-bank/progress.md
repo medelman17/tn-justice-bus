@@ -76,5 +76,6 @@ The project has completed the initial setup, bootstrapping, database implementat
 - All previous decisions documented in previous progress.md updates
 - **[2025-04-12]**: Decision to integrate the Software Planning Tool MCP server for enhanced project planning capabilities.
 - **[2025-04-12]**: Decision to implement Knock SMS notification system with offline support instead of Twilio for SMS communication needs.
+- **[2025-04-12]**: Updated viewport configuration in Next.js application to follow Next.js 14+ best practices by moving themeColor to viewport export.
 
 This document reflects the project progress after integrating the Knock SMS notification system with offline-support capabilities and developing a comprehensive solution for rural connectivity challenges.

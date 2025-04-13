@@ -18,6 +18,13 @@
 
 ## 2. Recent Changes
 
+- **Next.js Viewport Configuration Update**:
+
+  - Fixed build warning about unsupported metadata themeColor in icon configuration
+  - Moved themeColor from metadata export to viewport export in layout.tsx
+  - Updated code to follow Next.js 14+ viewport API best practices
+  - Successfully verified fix with production build
+
 - **Knock SMS Notification Implementation**:
 
   - Implemented full Knock integration for SMS notifications with:

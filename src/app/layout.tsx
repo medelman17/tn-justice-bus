@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -16,12 +16,15 @@ export const metadata: Metadata = {
   title: "Tennessee Justice Bus Pre-Visit Screening",
   description: "Pre-visit screening and preparation for Tennessee Justice Bus clients",
   manifest: "/manifest.json",
-  themeColor: "#0f766e",
   appleWebApp: {
     capable: true,
     title: "Tennessee Justice Bus",
     statusBarStyle: "default",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0f766e",
 };
 
 export default function RootLayout({
